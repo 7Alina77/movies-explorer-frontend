@@ -49,11 +49,6 @@
   padding-right: 20px;
 }
 
-.footer__links-github {
-  text-decoration: none;
-  color: #000;
-}
-
 @media screen and (max-width: 850px) {
   .footer__wrapper {
     padding-left: 30px;

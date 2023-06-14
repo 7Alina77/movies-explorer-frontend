@@ -14,7 +14,7 @@ function AboutMe() {
             <h3 className='me__subtitle'>Фронтенд-разработчик, 25 лет</h3>
             <p className='me__text'>Меня зовут Алина, я закончила курс Веб-разработчик от Яндекс.Практикума. До этоого работала медиа-байером, помощником продакт-менеджера, проджект-менеджером, но всегда хотелось кодить. На данный момент работаю на фрилансе.</p>
           </div>
-          <a target='blank' className='me__github' href='https://github.com/7Alina77'>Github</a>
+          <a target='blank' className='me__github link-hover link' href='https://github.com/7Alina77'>Github</a>
         </div>
         <img className='me__photo' src={me} alt='мое фото'/>
       </div>

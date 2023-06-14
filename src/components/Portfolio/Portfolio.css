@@ -19,7 +19,6 @@
 }
 
 .portfolio__unit {
-  list-style: none;
   border-bottom: 1px solid #E8E8E8;
   max-width: 1140px;
   padding-top: 20px;
@@ -37,7 +36,6 @@
 
 .portfolio__link {
   display: flex;
-  text-decoration: none;
   justify-content: space-between;
 }
 
