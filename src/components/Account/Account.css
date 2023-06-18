@@ -1,0 +1,23 @@
+.account__auth-btn {
+  margin: 0;
+  padding: 8px 20px;
+  border: 0;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  background-color: #F4F4F4;
+  border-radius: 20px;
+}
+
+@media screen and (max-width: 850px) {
+  .account__auth-btn {
+    display: none;
+  }
+
+  .account__auth-burger {
+    display: block;
+    text-justify: center;
+  }
+}

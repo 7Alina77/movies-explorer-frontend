@@ -1,17 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './Header.css';
-import logo from '../../images/logo_main.svg';
+import burger from '../../images/burger.svg';
 import { Link, useLocation, Route, Routes} from 'react-router-dom';
 import Navigation from '../Navigation/Navigation';
+import Account from '../Account/Account';
+import MainLogo from '../MainLogo/MainLogo';
 
-function Header() {
-  const [isBurgerMenu, setIsBurgerMenu] = useState(false);
+function Header({onBurgerClick }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [locationIs, setLocationIs] = useState({main: null, pathLink: '', text:''});
 
   const location = useLocation();
   const path = location.pathname;
-  const {main, pathLink, text} = locationIs;
 
   const handleLoggedIn = () => {
     setIsLoggedIn(!isLoggedIn);
@@ -20,10 +19,8 @@ function Header() {
   return (
     <header className={`header ${path === '/' && `header__grey`}`}>
       <div className="header__wrapper">
-        <Link to="/">
-          <img className="header__logo link-hover" src={logo} alt="лого" />
-        </Link>
-        {path === '/movies' || path === '/saved-movies' ? <Navigation /> : ''}
+        <MainLogo />
+        {path === '/movies' || path === '/saved-movies' || path === '/profile' ? <Navigation /> : ''}
         <nav className="header__nav">
         {path === '/' ? (
           <ul className="header__auth">
@@ -38,9 +35,10 @@ function Header() {
               </Link>
             </li>
           </ul>) : (
-            <Link to="/profile" className='header__auth-link'>
-              <button type='button' className='header__auth-btn link link-hover'>Аккаунт</button>
-            </Link>
+            <>
+              <Account />
+              <button onClick={onBurgerClick} className='header__burger link-hover'><img className='header__burger-img' src={burger} alt='бургер меню'/></button>
+            </>
           )}
         </nav>
       </div>

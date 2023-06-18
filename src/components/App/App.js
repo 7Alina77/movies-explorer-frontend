@@ -7,19 +7,27 @@ import SavedMovies from '../SavedMovies/SavedMovies';
 import '../Multipurpose/Multipurpose.css';
 import Landing from '../Landing/Landing';
 import NotFound from '../NotFound/NotFound';
+import BurgerMenu from '../BurgerMenu/BurgerMenu';
 
 function App() {
+  const [isBurger, setIsBurger] = useState(false);
+
+  const handleBurger = () => {
+    setIsBurger(!isBurger);
+  };
+
   return (
     <div className='page'>
       <Routes>
-        <Route path='/' element={<Landing />}/>
-        <Route path='/movies' element={<Movies />}/>
-        <Route path='/saved-movies' element={<SavedMovies />}/>
-        <Route path='/profile' element={<Landing />}/>
+        <Route path='/' element={<Landing onBurgerClick={handleBurger}/>}/>
+        <Route path='/movies' element={<Movies onBurgerClick={handleBurger} />}/>
+        <Route path='/saved-movies' element={<SavedMovies onBurgerClick={handleBurger} />}/>
+        <Route path='/profile' element={<Landing onBurgerClick={handleBurger} />}/>
         <Route path='/signin' element={{/**<Login />**/}}/>
         <Route path='/signin' element={{/**<Register />}**/}}/>
         <Route path='*' element={<NotFound />}/>
       </Routes>
+      <BurgerMenu isBurger={isBurger} onClose={handleBurger}/>
     </div>
   );
 }

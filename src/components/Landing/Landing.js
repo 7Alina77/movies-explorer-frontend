@@ -3,12 +3,12 @@ import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import Main from "../Main/Main";
 
-function Landing() {
+function Landing({onBurgerClick}) {
   const location = useLocation();
 
   return(
     <>
-      <Header />
+      <Header onBurgerClick={onBurgerClick}/>
       <Main />
       {location.pathname !== "/profile" && <Footer />}
     </>

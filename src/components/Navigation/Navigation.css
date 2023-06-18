@@ -14,6 +14,13 @@
   flex-direction: row;
 }
 
+.nav-movies__items_state_burger {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 .nav-movies__item {
   font-family: 'Inter';
   font-style: normal;
@@ -26,6 +33,41 @@
   padding-right: 16px;
 }
 
+.nav-movies__item-burger {
+  margin-bottom: 28px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.nav-movies__item-burger:first-child {
+  padding-right: 0;
+}
+
 .nav-movies__item_state_active {
   font-weight: 500;
+}
+
+@media screen and (max-width: 850px) {
+  .nav-movies {
+    display: none;
+  }
+
+  .nav-movies_state_burger {
+    display: block;
+    padding: 0;
+  }
+
+  .nav-movies__item-burger_state_active {
+    padding-bottom: 4px;
+    border-bottom: 1px solid #000;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .nav-movies__item-burger {
+    margin-bottom: 24px;
+  }
 }

@@ -4,10 +4,10 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 
-function Movies() {
+function Movies({onBurgerClick}) {
   return (
     <section className='movies'>
-      <Header />
+      <Header onBurgerClick={onBurgerClick}/>
       <SearchForm />
       <MoviesCardList />
       <Footer />
