@@ -50,7 +50,7 @@
   transition: .4s;
 }
 
-.checkbox__switch-input:checked + .checkbox__switch-round {
+.checkbox__switch-input_state_active + .checkbox__switch-round {
   background-color: #2BE080;
 }
 
@@ -58,7 +58,7 @@
   box-shadow: 0 0 1px #2BE080;
 }
 
-.checkbox__switch-input:checked + .checkbox__switch-round:before {
+.checkbox__switch-input_state_active + .checkbox__switch-round:before {
   -webkit-transform: translateX(20px);
   -ms-transform: translateX(20px);
   transform: translateX(20px);

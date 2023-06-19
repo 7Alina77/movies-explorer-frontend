@@ -1,4 +1,23 @@
+.burger {
+  position: fixed;
+  top: -100%;
+  right: -100%;
+}
+
+.burger-active {
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+
 .burger__wrapper {
+  visibility: hidden;
+  transition: all 1s;
+}
+
+.burger__wrapper_state_active {
+  visibility: visible;
+  transition: all 1s;
   position: fixed;
   top: 0;
   right: 0;
@@ -10,6 +29,13 @@
 }
 
 .burger__menu {
+  visibility: hidden;
+  transition: all 1s;
+}
+
+.burger__menu_state_active {
+  visibility: visible;
+  transition: all 1s;
   display: flex;
   flex-direction: column;
   z-index: 5;
@@ -21,6 +47,7 @@
   background-color: #fff;
   margin: 0;
   padding: 0;
+  visibility: visible;
 }
 
 .burger__menu-items {

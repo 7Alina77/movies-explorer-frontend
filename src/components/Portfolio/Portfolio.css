@@ -37,6 +37,7 @@
 .portfolio__link {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
 }
 
 .portfolio__link-title {
@@ -51,7 +52,7 @@
 
 .portfolio__link-img {
   width: 28px;
-  height: 60px;
+  height: 28px;
 }
 
 @media screen and (max-width: 850px) {
@@ -80,6 +81,6 @@
 
   .portfolio__link-img {
     width: 18px;
-    height: 28px;
+    height: 18px;
   }
 }

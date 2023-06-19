@@ -11,17 +11,22 @@ import BurgerMenu from '../BurgerMenu/BurgerMenu';
 
 function App() {
   const [isBurger, setIsBurger] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
 
   const handleBurger = () => {
     setIsBurger(!isBurger);
   };
 
+  const handleChecked = () => {
+    setIsChecked(!isChecked);
+  }
+
   return (
     <div className='page'>
       <Routes>
         <Route path='/' element={<Landing onBurgerClick={handleBurger}/>}/>
-        <Route path='/movies' element={<Movies onBurgerClick={handleBurger} />}/>
-        <Route path='/saved-movies' element={<SavedMovies onBurgerClick={handleBurger} />}/>
+        <Route path='/movies' element={<Movies isChecked={isChecked} onSwitchClick={handleChecked} onBurgerClick={handleBurger} />}/>
+        <Route path='/saved-movies' element={<SavedMovies isChecked={isChecked} onSwitchClick={handleChecked} onBurgerClick={handleBurger} />}/>
         <Route path='/profile' element={<Landing onBurgerClick={handleBurger} />}/>
         <Route path='/signin' element={{/**<Login />**/}}/>
         <Route path='/signin' element={{/**<Register />}**/}}/>

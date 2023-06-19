@@ -6,10 +6,9 @@ import Navigation from '../Navigation/Navigation';
 
 function BurgerMenu({ isBurger, onClose }) {
   return (
-    <section className='burger'>
-      {isBurger && (
-        <div className='burger__wrapper'>
-          <nav className='burger__menu'>
+    <section className={`burger ${isBurger && `burger-active`}`}>
+        <div className={`burger__wrapper ${isBurger && `burger__wrapper_state_active`}`}>
+          <nav className={`burger__menu ${isBurger && `burger__menu_state_active`}`}>
             <button onClick={onClose} className='burger__menu-btn link-hover'>
               <img className='burger__menu-img' src={cross} alt='кнопка закрытия бокового меню' />
             </button>
@@ -26,7 +25,6 @@ function BurgerMenu({ isBurger, onClose }) {
             </ul>
           </nav>
         </div>
-      )}
     </section>
   )
 }

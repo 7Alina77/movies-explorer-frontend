@@ -1,10 +1,10 @@
 import './FilterCheckbox.css';
 
-function FilterCheckbox() {
+function FilterCheckbox({isChecked, onSwitchClick}) {
   return (
     <div className='checkbox'>
       <label className='checkbox__switch'>
-        <input className='checkbox__switch-input' type="checkbox" />
+        <input onClick={onSwitchClick} className={`checkbox__switch-input ${isChecked && `checkbox__switch-input_state_active`}`} type="checkbox" />
         <span className='checkbox__switch-round'></span>
       </label>
       <p className='checkbox__text'>Короткометражки</p>

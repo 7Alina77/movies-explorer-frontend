@@ -2,7 +2,7 @@ import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import search from '../../images/search.svg';
 
-function SearchForm() {
+function SearchForm({isChecked, onSwitchClick}) {
   return (
     <section className='search-form'>
       <form className='search-form__form' id='search'>
@@ -11,7 +11,7 @@ function SearchForm() {
           <img className='search-form__btn-img' src={search} alt='кнопка поиска' />
         </button>
       </form>
-      <FilterCheckbox />
+      <FilterCheckbox isChecked={isChecked} onSwitchClick={onSwitchClick}/>
       <hr className='search-form__line' />
     </section>
   )
