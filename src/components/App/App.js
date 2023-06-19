@@ -8,6 +8,8 @@ import '../Multipurpose/Multipurpose.css';
 import Landing from '../Landing/Landing';
 import NotFound from '../NotFound/NotFound';
 import BurgerMenu from '../BurgerMenu/BurgerMenu';
+import Register from '../Auth/Register';
+import Login from '../Auth/Login';
 
 function App() {
   const [isBurger, setIsBurger] = useState(false);
@@ -28,8 +30,8 @@ function App() {
         <Route path='/movies' element={<Movies isChecked={isChecked} onSwitchClick={handleChecked} onBurgerClick={handleBurger} />}/>
         <Route path='/saved-movies' element={<SavedMovies isChecked={isChecked} onSwitchClick={handleChecked} onBurgerClick={handleBurger} />}/>
         <Route path='/profile' element={<Landing onBurgerClick={handleBurger} />}/>
-        <Route path='/signin' element={{/**<Login />**/}}/>
-        <Route path='/signin' element={{/**<Register />}**/}}/>
+        <Route path='/signin' element={<Login />}/>
+        <Route path='/signup' element={<Register />}/>
         <Route path='*' element={<NotFound />}/>
       </Routes>
       <BurgerMenu isBurger={isBurger} onClose={handleBurger}/>
