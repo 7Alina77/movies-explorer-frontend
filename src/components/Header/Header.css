@@ -71,11 +71,16 @@
   }
 
   .header__nav {
-    padding-top: 15px;
+    padding: 0;
+  }
+
+  .header__auth {
+    margin-top: 29px;
   }
 
   .header__burger {
     display: block;
+    margin-top: 15px;
   }
 }
 

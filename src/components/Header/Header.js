@@ -25,12 +25,12 @@ function Header({onBurgerClick }) {
         {path === '/' ? (
           <ul className="header__auth">
             <li className="header__auth-item link link-hover">
-              <Link to="/sign-up" className="header__link">
+              <Link to="/signup" className="header__link">
                 Регистрация
               </Link>
             </li>
             <li className="header__auth-item link link-hover">
-              <Link to="/sign-in" className="header__link header__link-btn">
+              <Link to="/signin" className="header__link header__link-btn">
                 Войти
               </Link>
             </li>

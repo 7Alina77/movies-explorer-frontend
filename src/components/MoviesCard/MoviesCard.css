@@ -3,6 +3,7 @@
   max-height: 271px;
   box-sizing: border-box;
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
 }
 
 .movies-card:hover {
@@ -20,7 +21,7 @@
 
 .movies-card__headers {
   margin: 0;
-  max-width: 200px;
+  max-width: 250px;
 }
 
 .movies-card__title {
@@ -59,6 +60,8 @@
   max-height: 100%;
   object-fit: cover;
   object-position: center;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 @media screen and (max-width: 850px) {

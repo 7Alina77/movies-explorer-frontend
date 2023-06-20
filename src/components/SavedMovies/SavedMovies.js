@@ -4,15 +4,15 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 
-function Movies({isChecked, onSwitchClick, onBurgerClick}) {
+function SavedMovies({savedCard, isSavedCard, isChecked, onSwitchClick, onBurgerClick}) {
   return (
-    <section className='movies'>
+    <section className='saved-movies'>
       <Header onBurgerClick={onBurgerClick}/>
       <SearchForm isChecked={isChecked} onSwitchClick={onSwitchClick}/>
-      <MoviesCardList />
+      <MoviesCardList savedCard={savedCard} isSavedCard={isSavedCard}/>
       <Footer />
     </section>
   )
 }
 
-export default Movies;
+export default SavedMovies;

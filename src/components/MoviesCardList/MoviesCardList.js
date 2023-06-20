@@ -3,13 +3,16 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 import cards from '../../utils/cards';
 import { useLocation } from 'react-router-dom';
 
-function MoviesCardList({ isSaved, onCardClick}) {
+function MoviesCardList({savedCard, isSavedCard }) {
   const location = useLocation();
   const path = location.pathname;
+
   const cardsElements = cards.map((card) => {
     return (
-    <MoviesCard
-      key = {card._id}
+    <MoviesCard 
+      savedCard={savedCard}
+      isSavedCard = {isSavedCard}
+      key = {card.movieId}
       card = {card}
       country = {card.country}
       director = {card.director}
@@ -23,6 +26,7 @@ function MoviesCardList({ isSaved, onCardClick}) {
       movieId = {card.movieId}
       nameRU = {card.nameRU}
       nameEN = {card.nameEN} 
+      like = {card.like}
     />)
   })
   return (

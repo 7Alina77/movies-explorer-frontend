@@ -3,3 +3,9 @@
   height: 38px;
   padding: 18px 62px 18px 0;
 }
+
+@media screen and (max-width: 425px) {
+  .main-logo__img {
+    padding-right: 0;
+  }
+}

@@ -4,33 +4,24 @@ import './Auth.css';
 import MainLogo from "../MainLogo/MainLogo";
 
 function Login({onSubmit}) {
-  const [formValue, setFormValue] = useState({
-    email: '',
-    password: ''
-  });
-
-  const handleChangeLogin = (e) => {
-    const {name, value} = e.target;
-    setFormValue({
-      ...formValue,
-      [name]: value
-    });
-  }
-
-  const handleSubmitLogin = (e) => {
-    e.preventDefault();
-    if(!formValue.email || !formValue.password) {
-      return;
-    }
-    onSubmit(formValue.email, formValue.password);
-    setFormValue({email: '', password: ''});
-  }
-
   const [emailError, setEmailError] = useState('');
   const [passError, setPassError] = useState(''); 
   const [emailDirty, setEmailDirty] = useState(false);
   const [passDirty, setPassDirty] = useState(false);
   const [formValid, setFormValid] = useState(false);
+  const [formValue, setFormValue] = useState({
+    email: '',
+    password: ''
+  });
+
+  const handleSubmitLogin = (e) => {
+    e.preventDefault();
+    if(!formValue.email || !formValue.pass) {
+      return;
+    }
+    onSubmit(formValue.email, formValue.pass);
+    setFormValue({email: '', password: ''});
+  }
 
   const blurHandler = (e) => {
     switch (e.target.name) {
@@ -108,7 +99,7 @@ function Login({onSubmit}) {
         </form>
         <div className="authorization__login">
           <p>Ещё не зарегистрированы?</p>
-          <Link to='/signin'className="authorization__link link link-hover">Регистрация</Link>
+          <Link to='/signup'className="authorization__link link link-hover">Регистрация</Link>
         </div>
     </section>
   )

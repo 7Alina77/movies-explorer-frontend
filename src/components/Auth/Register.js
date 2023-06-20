@@ -4,25 +4,6 @@ import { Link } from "react-router-dom";
 import MainLogo from '../MainLogo/MainLogo';
 
 function Register({onSubmit}) {
-  const [formValue, setFormValue] = useState({
-    name: '',
-    email: '',
-    password: ''
-  });
-
-  const handleSubmitRegister = (e) => {
-    e.preventDefault();
-    if(!formValue.email || !formValue.password || !formValue.name) {
-      return;
-    }
-    //onSubmit(formValue.name ,formValue.email , formValue.password);
-    setFormValue({
-      name: '',
-      email:'', 
-      password: ''
-    })
-  } 
-
   const [nameError, setNameError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passError, setPassError] = useState(''); 
@@ -30,6 +11,25 @@ function Register({onSubmit}) {
   const [emailDirty, setEmailDirty] = useState(false);
   const [passDirty, setPassDirty] = useState(false);
   const [formValid, setFormValid] = useState(false);
+  const [formValue, setFormValue] = useState({
+    name: '',
+    email: '',
+    pass: ''
+  });
+
+  const handleSubmitRegister = (e) => {
+    e.preventDefault();
+    if(!formValue.email || !formValue.pass || !formValue.name) {
+      console.log('Данные введены некорректно!');
+      return;
+    }
+    onSubmit(formValue.name ,formValue.email , formValue.pass);
+    setFormValue({
+      name: '',
+      email:'', 
+      pass: ''
+    })
+  } 
 
   const blurHandler = (e) => {
     switch (e.target.name) {
@@ -91,7 +91,7 @@ function Register({onSubmit}) {
     <section className="authorization">
       <MainLogo />
       <h2 className="authorization__title">Добро пожаловать!</h2>
-        <form onSubmit={handleSubmitRegister} className='authorization__form' noValidate>
+        <form onSubmit={handleSubmitRegister} id='authorization__form' className='authorization__form' noValidate>
           <div className="authorization__container">
             <label className='authorization__label'>Имя</label>
             <input className='authorization__input'
@@ -125,7 +125,7 @@ function Register({onSubmit}) {
             ></input>
             <p className={`authorization__validate ${(passDirty && passError) && `authorization__validate_state_active`}`}>{passError}</p>
           </div>
-          <button disabled={!formValid} className={`authorization__submit link-hover ${!formValid && `authorization__submit_type_active`}`} type="submit">Зарегистрироваться</button>
+          <button form='authorization__form' disabled={!formValid} className={`authorization__submit link-hover ${!formValid && `authorization__submit_type_active`}`} type="submit">Зарегистрироваться</button>
         </form>
         <div className="authorization__login">
           <p>Уже зарегистрированы?</p>

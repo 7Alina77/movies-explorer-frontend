@@ -10,7 +10,8 @@ const cards = [
     "thumbnail": "https://anime-star.ru/wp-content/uploads/2021/12/Nyashnye-anime-avatarki-tyan_04.jpg",
     "movieId": 1,
     "nameRU": "«Роллинг Стоунз» в изгнании",
-    "nameEN": "Stones in Exile"
+    "nameEN": "Stones in Exile",
+    "like": []
   },
   {
     "country": "США",
@@ -21,9 +22,10 @@ const cards = [
     "image": "https://anime-star.ru/wp-content/uploads/2021/12/Nyashnye-anime-avatarki-tyan_04.jpg",
     "trailerLink": "https://www.youtube.com/watch?v=UXcqcdYABFw",
     "thumbnail": "https://anime-star.ru/wp-content/uploads/2021/12/Nyashnye-anime-avatarki-tyan_04.jpg",
-    "movieId": 1,
+    "movieId": 2,
     "nameRU": "«Роллинг Стоунз» в изгнании",
-    "nameEN": "Stones in Exile"
+    "nameEN": "Stones in Exile",
+    "like": []
   },
   {
     "country": "США",
@@ -34,9 +36,10 @@ const cards = [
     "image": "https://anime-star.ru/wp-content/uploads/2021/12/Nyashnye-anime-avatarki-tyan_04.jpg",
     "trailerLink": "https://www.youtube.com/watch?v=UXcqcdYABFw",
     "thumbnail": "https://anime-star.ru/wp-content/uploads/2021/12/Nyashnye-anime-avatarki-tyan_04.jpg",
-    "movieId": 1,
+    "movieId": 3,
     "nameRU": "«Роллинг Стоунз» в изгнании",
-    "nameEN": "Stones in Exile"
+    "nameEN": "Stones in Exile",
+    "like": []
   },
   {
     "country": "США",
@@ -47,9 +50,10 @@ const cards = [
     "image": "https://anime-star.ru/wp-content/uploads/2021/12/Nyashnye-anime-avatarki-tyan_04.jpg",
     "trailerLink": "https://www.youtube.com/watch?v=UXcqcdYABFw",
     "thumbnail": "https://anime-star.ru/wp-content/uploads/2021/12/Nyashnye-anime-avatarki-tyan_04.jpg",
-    "movieId": 1,
+    "movieId": 4,
     "nameRU": "«Роллинг Стоунз» в изгнании",
-    "nameEN": "Stones in Exile"
+    "nameEN": "Stones in Exile",
+    "like": []
   },
   {
     "country": "США",
@@ -60,9 +64,10 @@ const cards = [
     "image": "https://anime-star.ru/wp-content/uploads/2021/12/Nyashnye-anime-avatarki-tyan_04.jpg",
     "trailerLink": "https://www.youtube.com/watch?v=UXcqcdYABFw",
     "thumbnail": "https://anime-star.ru/wp-content/uploads/2021/12/Nyashnye-anime-avatarki-tyan_04.jpg",
-    "movieId": 1,
+    "movieId": 5,
     "nameRU": "«Роллинг Стоунз» в изгнании",
-    "nameEN": "Stones in Exile"
+    "nameEN": "Stones in Exile",
+    "like": []
   },
   {
     "country": "США",
@@ -73,9 +78,10 @@ const cards = [
     "image": "https://anime-star.ru/wp-content/uploads/2021/12/Nyashnye-anime-avatarki-tyan_04.jpg",
     "trailerLink": "https://www.youtube.com/watch?v=UXcqcdYABFw",
     "thumbnail": "https://anime-star.ru/wp-content/uploads/2021/12/Nyashnye-anime-avatarki-tyan_04.jpg",
-    "movieId": 1,
+    "movieId": 6,
     "nameRU": "«Роллинг Стоунз» в изгнании",
-    "nameEN": "Stones in Exile"
+    "nameEN": "Stones in Exile",
+    "like": []
   },
   {
     "country": "США",
@@ -86,9 +92,10 @@ const cards = [
     "image": "https://anime-star.ru/wp-content/uploads/2021/12/Nyashnye-anime-avatarki-tyan_04.jpg",
     "trailerLink": "https://www.youtube.com/watch?v=UXcqcdYABFw",
     "thumbnail": "https://anime-star.ru/wp-content/uploads/2021/12/Nyashnye-anime-avatarki-tyan_04.jpg",
-    "movieId": 1,
+    "movieId": 7,
     "nameRU": "«Роллинг Стоунз» в изгнании",
-    "nameEN": "Stones in Exile"
+    "nameEN": "Stones in Exile",
+    "like": []
   },
   {
     "country": "США",
@@ -99,9 +106,10 @@ const cards = [
     "image": "https://anime-star.ru/wp-content/uploads/2021/12/Nyashnye-anime-avatarki-tyan_04.jpg",
     "trailerLink": "https://www.youtube.com/watch?v=UXcqcdYABFw",
     "thumbnail": "https://anime-star.ru/wp-content/uploads/2021/12/Nyashnye-anime-avatarki-tyan_04.jpg",
-    "movieId": 1,
+    "movieId": 8,
     "nameRU": "«Роллинг Стоунз» в изгнании",
-    "nameEN": "Stones in Exile"
+    "nameEN": "Stones in Exile",
+    "like": []
   },
 ];
 
