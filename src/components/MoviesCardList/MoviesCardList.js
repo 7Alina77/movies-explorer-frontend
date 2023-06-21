@@ -2,16 +2,25 @@ import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import cards from '../../utils/cards';
 import { useLocation } from 'react-router-dom';
+import { useEffect,useState } from 'react';
 
-function MoviesCardList({savedCard, isSavedCard }) {
+function MoviesCardList() {
   const location = useLocation();
   const path = location.pathname;
+  const [films, setFilms] = useState([]);
 
-  const cardsElements = cards.map((card) => {
+  useEffect(() => {
+    setFilms(cards);
+  },[]);
+
+  function handleDeleteCard(cardToDelete) {
+    setFilms(films.filter((film) => JSON.stringify(film) !== JSON.stringify(cardToDelete)))
+  }
+
+  const cardsElements = films.map((card) => {
     return (
     <MoviesCard 
-      savedCard={savedCard}
-      isSavedCard = {isSavedCard}
+      handleDeleteCard={handleDeleteCard}
       key = {card.movieId}
       card = {card}
       country = {card.country}
@@ -29,9 +38,10 @@ function MoviesCardList({savedCard, isSavedCard }) {
       like = {card.like}
     />)
   })
+
   return (
     <section className='movies-list'>
-      {cards.length === 0 ? (
+      {films.length === 0 ? (
         <p className='movies-list__empty'>Упс! Фильмы не найдены &#128531;</p>
       ) : (
         <>

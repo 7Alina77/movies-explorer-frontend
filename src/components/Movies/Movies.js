@@ -9,7 +9,7 @@ function Movies({savedCard, isSavedCard, isChecked, onSwitchClick, onBurgerClick
     <section className='movies'>
       <Header onBurgerClick={onBurgerClick}/>
       <SearchForm isChecked={isChecked} onSwitchClick={onSwitchClick}/>
-      <MoviesCardList savedCard={savedCard} isSavedCard={isSavedCard}/>
+      <MoviesCardList/>
       <Footer />
     </section>
   )

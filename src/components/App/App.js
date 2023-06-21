@@ -20,7 +20,6 @@ function App() {
   const [isBurger, setIsBurger] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [isInfoTooltipOpen ,setIsInfoTooltipOpen] = useState(false);
-  const [savedCard, setIsSavedCard ] = useState(false);
   const [isSuccessInfoTooltipStatus, setIsSuccessInfoTooltipStatus] = useState({
     isSuccess: true,
     text: 'Вы успешно зарегистрировались!'
@@ -75,18 +74,13 @@ function App() {
     }
   }
 
-  function handleSavedCard(card) {
-    console.log(card);
-    setIsSavedCard(!savedCard);
-  }
-
   return (
   <CurrentUserContext.Provider value={currentUser}>
     <div className='page'>
       <Routes>
         <Route path='/' element={<Landing onBurgerClick={handleBurger}/>}/>
-        <Route path='/movies' element={<Movies savedCard={savedCard} isSavedCard={handleSavedCard} isChecked={isChecked} onSwitchClick={handleChecked} onBurgerClick={handleBurger} />}/>
-        <Route path='/saved-movies' element={<SavedMovies savedCard={savedCard} isSavedCard={handleSavedCard} isChecked={isChecked} onSwitchClick={handleChecked} onBurgerClick={handleBurger} />}/>
+        <Route path='/movies' element={<Movies isChecked={isChecked} onSwitchClick={handleChecked} onBurgerClick={handleBurger} />}/>
+        <Route path='/saved-movies' element={<SavedMovies isChecked={isChecked} onSwitchClick={handleChecked} onBurgerClick={handleBurger} />}/>
         <Route path='/profile' element={<Profile onClick={handleSignOut} onUpdateUser={handleUpdateUser} onBurgerClick={handleBurger} />}/>
         <Route path='/signin' element={<Login onSubmit={handleLogin}/>}/>
         <Route path='/signup' element={<Register onSubmit={handleRegister}/>}/>
