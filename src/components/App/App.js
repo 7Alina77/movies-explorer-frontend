@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../pages/index.css';
 import './App.css';
 import { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
