@@ -9,8 +9,10 @@ function SavedMovies({ isChecked, onSwitchClick, onBurgerClick}) {
   return (
     <section className='saved-movies'>
       <Header onBurgerClick={onBurgerClick}/>
-      <SearchForm isChecked={isChecked} onSwitchClick={onSwitchClick}/>
-      <MoviesCardList />
+      <main>
+        <SearchForm isChecked={isChecked} onSwitchClick={onSwitchClick}/>
+        <MoviesCardList />
+      </main>
       <Footer />
     </section>
   )

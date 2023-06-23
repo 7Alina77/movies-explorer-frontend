@@ -15,7 +15,7 @@
 .footer__header {
   padding-bottom: 20px;
   margin: 0;
-  font-family: 'Inter';
+  font-family: 'Inter', Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 13px;
@@ -28,7 +28,7 @@
 .footer__all {
   display: flex;
   justify-content: space-between;
-  font-family: 'Inter';
+  font-family: 'Inter', Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 13px;

@@ -8,7 +8,7 @@ function Login({onSubmit}) {
   const [passError, setPassError] = useState(''); 
   const [emailDirty, setEmailDirty] = useState(false);
   const [passDirty, setPassDirty] = useState(false);
-  const [formValid, setFormValid] = useState(false);
+  const [formValid, setFormValid] = useState(true); //Поставить фолс
   const [formValue, setFormValue] = useState({
     email: '',
     password: ''
@@ -60,22 +60,22 @@ function Login({onSubmit}) {
     }
   }
 
-  useEffect((e) => {
+  /**useEffect((e) => {
     if(emailError || passError || !emailDirty || !passDirty) {
       setFormValid(false);
     } else {
       setFormValid(true);
     }
-  }, [emailError, passError, emailDirty, passDirty]);
+  }, [emailError, passError, emailDirty, passDirty]);**/
 
   return(
-    <section className="authorization">
+    <main className="authorization">
       <MainLogo />
       <h2 className="authorization__title">Рады видеть!</h2>
         <form onSubmit={handleSubmitLogin} className='authorization__form' noValidate>
           <div className="authorization__container">
             <label className='authorization__label'>Email</label>
-            <input className='authorization__input'
+            <input required className='authorization__input'
               value={formValue.email}
               onBlur={e => blurHandler(e)}
               name="email"
@@ -84,7 +84,7 @@ function Login({onSubmit}) {
             ></input>
             <p className={`authorization__validate ${(emailDirty && emailError) && `authorization__validate_state_active`}`}>{emailError}</p>
             <label className='authorization__label'>Пароль</label>
-            <input className='authorization__input'
+            <input required className='authorization__input'
               value={formValue.pass}
               maxLength={15}
               minLength={3}
@@ -95,13 +95,13 @@ function Login({onSubmit}) {
             ></input>
             <p className={`authorization__validate ${(passDirty && passError) && `authorization__validate_state_active`}`}>{passError}</p>
           </div>
-          <button disabled={!formValid} className={`authorization__submit link-hover ${!formValid && `authorization__submit_type_active`}`} type="submit">Войти</button>
+          <button /**disabled={!formValid}**/ className={`authorization__submit link-hover ${!formValid && `authorization__submit_type_active`}`} type="submit">Войти</button>
         </form>
         <div className="authorization__login">
           <p>Ещё не зарегистрированы?</p>
           <Link to='/signup'className="authorization__link link link-hover">Регистрация</Link>
         </div>
-    </section>
+    </main>
   )
 }
 

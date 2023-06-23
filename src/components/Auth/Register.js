@@ -10,7 +10,7 @@ function Register({onSubmit}) {
   const [nameDirty, setNameDirty] = useState(false);
   const [emailDirty, setEmailDirty] = useState(false);
   const [passDirty, setPassDirty] = useState(false);
-  const [formValid, setFormValid] = useState(false);
+  const [formValid, setFormValid] = useState(true); //Поставить фолс
   const [formValue, setFormValue] = useState({
     name: '',
     email: '',
@@ -79,22 +79,22 @@ function Register({onSubmit}) {
     }
   }
 
-  useEffect((e) => {
+  /**useEffect((e) => {
     if(nameError || emailError || passError || !nameDirty || !emailDirty || !passDirty) {
       setFormValid(false);
     } else {
       setFormValid(true);
     }
-  }, [nameError, emailError, passError, nameDirty, emailDirty, passDirty]);
+  }, [nameError, emailError, passError, nameDirty, emailDirty, passDirty]);**/
 
   return (
-    <section className="authorization">
+    <main className="authorization">
       <MainLogo />
       <h2 className="authorization__title">Добро пожаловать!</h2>
         <form onSubmit={handleSubmitRegister} id='authorization__form' className='authorization__form' noValidate>
           <div className="authorization__container">
             <label className='authorization__label'>Имя</label>
-            <input className='authorization__input'
+            <input required className='authorization__input'
               maxLength={10}
               minLength={3}
               value={formValue.name}
@@ -105,7 +105,7 @@ function Register({onSubmit}) {
             ></input>
             <p className={`authorization__validate ${(nameDirty && nameError) && `authorization__validate_state_active`}`}>{nameError}</p>
             <label className='authorization__label'>Email</label>
-            <input className='authorization__input'
+            <input required className='authorization__input'
               value={formValue.email}
               onBlur={e => blurHandler(e)}
               name="email"
@@ -114,7 +114,7 @@ function Register({onSubmit}) {
             ></input>
             <p className={`authorization__validate ${(emailDirty && emailError) && `authorization__validate_state_active`}`}>{emailError}</p>
             <label className='authorization__label'>Пароль</label>
-            <input className='authorization__input'
+            <input required className='authorization__input'
               value={formValue.pass}
               maxLength={15}
               minLength={3}
@@ -125,13 +125,13 @@ function Register({onSubmit}) {
             ></input>
             <p className={`authorization__validate ${(passDirty && passError) && `authorization__validate_state_active`}`}>{passError}</p>
           </div>
-          <button form='authorization__form' disabled={!formValid} className={`authorization__submit link-hover ${!formValid && `authorization__submit_type_active`}`} type="submit">Зарегистрироваться</button>
+          <button form='authorization__form' /**disabled={!formValid}**/ className={`authorization__submit link-hover ${!formValid && `authorization__submit_type_active`}`} type="submit">Зарегистрироваться</button>
         </form>
         <div className="authorization__login">
           <p>Уже зарегистрированы?</p>
           <Link to='/signin'className="authorization__link link link-hover">Войти</Link>
         </div>
-    </section>
+    </main>
   )
 }
 

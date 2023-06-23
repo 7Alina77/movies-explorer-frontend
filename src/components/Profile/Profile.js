@@ -80,43 +80,45 @@ function Profile({onClick, onUpdateUser, onBurgerClick}) {
   return (
     <section className="profile">
       <Header onBurgerClick={onBurgerClick}/>
-      <h2 className="profile__title">Привет, {name}!</h2>
-        <form onSubmit={handleSubmit} id='profile__form' className='profile__form' noValidate>
-          <div className="profile__container">
-            <div className='profile__items'>
-              <label className='profile__label'>Имя</label>
-              <input className='profile__input'
-                disabled={disabled}
-                maxLength={10}
-                minLength={3}
-                value={name}
-                onBlur={e => blurHandler(e)}
-                name="name"
-                type="text"
-                onChange={handleChangeName}          
-              ></input>
+      <main>
+        <h2 className="profile__title">Привет, {name}!</h2>
+          <form onSubmit={handleSubmit} id='profile__form' className='profile__form' noValidate>
+            <div className="profile__container">
+              <div className='profile__items'>
+                <label className='profile__label'>Имя</label>
+                <input required className='profile__input'
+                  disabled={disabled}
+                  maxLength={10}
+                  minLength={3}
+                  value={name}
+                  onBlur={e => blurHandler(e)}
+                  name="name"
+                  type="text"
+                  onChange={handleChangeName}          
+                ></input>
+              </div>
+              <p className={`profile__validate ${(nameDirty && nameError) && `profile__validate_state_active`}`}>{nameError}</p>
+              <div className='profile__items'>
+                <label className='profile__label'>Email</label>
+                <input required className='profile__input'
+                  disabled={disabled}
+                  value={email}
+                  onBlur={e => blurHandler(e)}
+                  name="email"
+                  type="email"
+                  onChange={handleChangeEmail} 
+                ></input>
+              </div>
+              <p className={`profile__validate ${(emailDirty && emailError) && `profile__validate_state_active`}`}>{emailError}</p>
             </div>
-            <p className={`profile__validate ${(nameDirty && nameError) && `profile__validate_state_active`}`}>{nameError}</p>
-            <div className='profile__items'>
-              <label className='profile__label'>Email</label>
-              <input className='profile__input'
-                disabled={disabled}
-                value={email}
-                onBlur={e => blurHandler(e)}
-                name="email"
-                type="email"
-                onChange={handleChangeEmail} 
-              ></input>
-            </div>
-            <p className={`profile__validate ${(emailDirty && emailError) && `profile__validate_state_active`}`}>{emailError}</p>
-          </div>
-        </form>
-        {disabled === true ? (
-          <button onClick={handleDisabled} className='profile__submit link-hover' type="button">Редактировать</button>
-        ) : (
-          <button onClick={handleSave} className='profile__submit link-hover' type="submit">Сохранить</button>
-        )}
-        <button onClick={onClick} className="profile__link link link-hover">Выйти из аккаунта</button>
+          </form>
+          {disabled === true ? (
+            <button onClick={handleDisabled} className='profile__submit link-hover' type="button">Редактировать</button>
+          ) : (
+            <button onClick={handleSave} className='profile__submit link-hover' type="submit">Сохранить</button>
+          )}
+          <button onClick={onClick} className="profile__link link link-hover">Выйти из аккаунта</button>
+      </main>
     </section>
   )
 }

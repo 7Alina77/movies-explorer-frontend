@@ -25,7 +25,7 @@
   margin: 50px 70px 0;
   height: 36px; 
   padding: 0;
-  font-family: 'Inter';
+  font-family: 'Inter', Arial, sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -36,7 +36,7 @@
   border-radius: 6px;
 }
 
-@media screen and (max-width: 850px) {
+@media screen and (max-width: 900px) {
   .movies-list__items {
     grid-template-columns: repeat(2, 1fr);
     grid-auto-columns: minmax(auto, 339px);
@@ -51,7 +51,7 @@
   }
 }
 
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 670px) {
   .movies-list {
     margin-top: 40px;
   }

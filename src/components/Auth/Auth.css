@@ -10,7 +10,7 @@
 .authorization__title {
   margin: 0;
   margin-top: 22px;
-  font-family: 'Inter';
+  font-family: 'Inter', Arial, sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 24px;
@@ -38,7 +38,7 @@
   background: transparent;
   border: none;
   border-bottom: 1px solid #E8E8E8;
-  font-family: 'Inter';
+  font-family: 'Inter', Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -62,14 +62,14 @@
 }
 
 .authorization__input:invalid {
-  border-bottom: 1px solid #EE3465;
+  /**border-bottom: 1px solid #EE3465;**/
   color: #EE3465;
 }
 
 .authorization__label {
   margin-top: 6px;
   color: #A0A0A0;
-  font-family: 'Inter';
+  font-family: 'Inter', Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 10px;
@@ -81,7 +81,7 @@
   margin: 0;
   padding: 0;
   padding-top: 6px;
-  font-family: 'Inter';
+  font-family: 'Inter', Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 10px;
@@ -102,7 +102,7 @@
   background-color: #3456F3;
   width: 100%;
   height: 45px;
-  font-family: 'Inter';
+  font-family: 'Inter', Arial, sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
@@ -122,7 +122,7 @@
   padding-top: 16px;
   margin-bottom: 70px;
   align-items: center;
-  font-family: 'Inter';
+  font-family: 'Inter', Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -133,7 +133,7 @@
 .authorization__link {
   color: white;
   padding-left: 6px;
-  font-family: 'Inter';
+  font-family: 'Inter', Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;

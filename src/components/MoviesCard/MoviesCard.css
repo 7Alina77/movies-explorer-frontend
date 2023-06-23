@@ -21,22 +21,26 @@
 
 .movies-card__headers {
   margin: 0;
-  max-width: 250px;
+  max-width: 230px;
 }
 
 .movies-card__title {
   margin: 0;
-  font-family: 'Inter';
+  font-family: 'Inter', Arial, sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 15px;
   line-height: 18px;
   margin-bottom: 9px;
+  max-height: 18px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .movies-card__subtitle {
   margin: 0;
-  font-family: 'Inter';
+  font-family: 'Inter', Arial, sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 11px;
@@ -80,10 +84,26 @@
   box-sizing: border-box;
 }
 
+@media screen and (max-width: 1070px) {
+  .movies-card__headers {
+    max-width: 150px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .movies-card__headers {
+    max-width: 250px;
+  }
+}
+
 @media screen and (max-width: 850px) {
   .movies-card {
     max-width: 339px;
     max-height: 258px;
+  }
+
+  .movies-card__headers {
+    max-width: 200px;
   }
 }
 
