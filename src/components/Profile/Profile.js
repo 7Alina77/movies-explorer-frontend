@@ -80,9 +80,8 @@ function Profile({onClick, onUpdateUser, onBurgerClick}) {
   return (
     <section className="profile">
       <Header onBurgerClick={onBurgerClick}/>
-      <main>
         <h2 className="profile__title">Привет, {name}!</h2>
-          <form onSubmit={handleSubmit} id='profile__form' className='profile__form' noValidate>
+          <form onSubmit={handleSubmit} id='profile__form' className='profile__form' /**noValidate**/>
             <div className="profile__container">
               <div className='profile__items'>
                 <label className='profile__label'>Имя</label>
@@ -118,7 +117,6 @@ function Profile({onClick, onUpdateUser, onBurgerClick}) {
             <button onClick={handleSave} className='profile__submit link-hover' type="submit">Сохранить</button>
           )}
           <button onClick={onClick} className="profile__link link link-hover">Выйти из аккаунта</button>
-      </main>
     </section>
   )
 }
