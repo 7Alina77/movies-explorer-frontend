@@ -91,7 +91,7 @@ function Register({onSubmit}) {
     <main className="authorization">
       <MainLogo />
       <h2 className="authorization__title">Добро пожаловать!</h2>
-        <form onSubmit={handleSubmitRegister} id='authorization__form' className='authorization__form' noValidate>
+        <form onSubmit={handleSubmitRegister} id='authorization__form' className='authorization__form' /**noValidate**/>
           <div className="authorization__container">
             <label className='authorization__label'>Имя</label>
             <input required className='authorization__input'

@@ -45,7 +45,7 @@ function SearchForm({isChecked, onSwitchClick}) {
 
   return (
     <section className='search-form'>
-      <form className='search-form__form' id='search' noValidate>
+      <form className='search-form__form' id='search' /**noValidate**/>
         <input required className='search-form__input' form='search' placeholder='Фильм'
         value={formValue.search}
         minLength={3}

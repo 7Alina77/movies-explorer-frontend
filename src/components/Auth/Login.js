@@ -72,7 +72,7 @@ function Login({onSubmit}) {
     <main className="authorization">
       <MainLogo />
       <h2 className="authorization__title">Рады видеть!</h2>
-        <form onSubmit={handleSubmitLogin} className='authorization__form' noValidate>
+        <form onSubmit={handleSubmitLogin} className='authorization__form' /**noValidate**/>
           <div className="authorization__container">
             <label className='authorization__label'>Email</label>
             <input required className='authorization__input'
