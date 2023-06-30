@@ -8,7 +8,7 @@ function Login({onSubmit}) {
   const [passError, setPassError] = useState(''); 
   const [emailDirty, setEmailDirty] = useState(false);
   const [passDirty, setPassDirty] = useState(false);
-  const [formValid, setFormValid] = useState(true); //Поставить фолс
+  const [formValid, setFormValid] = useState(false); 
   const [formValue, setFormValue] = useState({
     email: '',
     password: ''
@@ -34,7 +34,7 @@ function Login({onSubmit}) {
     }
   }
 
-  const handleChangeRegister = (e) => {
+  const handleChangeLogin = (e) => {
     const {name, value} = e.target;
 
     setFormValue({
@@ -60,13 +60,13 @@ function Login({onSubmit}) {
     }
   }
 
-  /**useEffect((e) => {
+  useEffect((e) => {
     if(emailError || passError || !emailDirty || !passDirty) {
       setFormValid(false);
     } else {
       setFormValid(true);
     }
-  }, [emailError, passError, emailDirty, passDirty]);**/
+  }, [emailError, passError, emailDirty, passDirty]);
 
   return(
     <main className="authorization">
@@ -80,7 +80,7 @@ function Login({onSubmit}) {
               onBlur={e => blurHandler(e)}
               name="email"
               type="email"
-              onChange={handleChangeRegister} 
+              onChange={handleChangeLogin} 
             ></input>
             <p className={`authorization__validate ${(emailDirty && emailError) && `authorization__validate_state_active`}`}>{emailError}</p>
             <label className='authorization__label'>Пароль</label>
@@ -91,11 +91,11 @@ function Login({onSubmit}) {
               onBlur={e => blurHandler(e)}
               name="pass"
               type="password"
-              onChange={handleChangeRegister}
+              onChange={handleChangeLogin}
             ></input>
             <p className={`authorization__validate ${(passDirty && passError) && `authorization__validate_state_active`}`}>{passError}</p>
           </div>
-          <button /**disabled={!formValid}**/ className={`authorization__submit link-hover ${!formValid && `authorization__submit_type_active`}`} type="submit">Войти</button>
+          <button disabled={!formValid} className={`authorization__submit link-hover ${!formValid && `authorization__submit_type_active`}`} type="submit">Войти</button>
         </form>
         <div className="authorization__login">
           <p>Ещё не зарегистрированы?</p>
