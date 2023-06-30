@@ -6,23 +6,24 @@ import Navigation from '../Navigation/Navigation';
 import Account from '../Account/Account';
 import MainLogo from '../MainLogo/MainLogo';
 
-function Header({onBurgerClick }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+function Header({isLoggedIn, onBurgerClick }) {
   const location = useLocation();
   const path = location.pathname;
-
-  const handleLoggedIn = () => {
-    setIsLoggedIn(!isLoggedIn);
-  }
 
   return (
     <header className={`header ${path === '/' && `header__grey`}`}>
       <div className="header__wrapper">
         <MainLogo />
-        {path === '/movies' || path === '/saved-movies' || path === '/profile' ? <Navigation /> : ''}
-        <nav className="header__nav">
-        {path === '/' ? (
+        {(path === '/movies' || path === '/saved-movies' || path === '/profile') && (
+          <>
+            <Navigation />
+              <nav className="header__nav">
+                <Account />
+                <button onClick={onBurgerClick} className='header__burger link-hover'><img className='header__burger-img' src={burger} alt='бургер меню'/></button>
+              </nav>
+          </>
+        )}
+        {(path === '/' &&!isLoggedIn) && (
           <ul className="header__auth">
             <li className="header__auth-item link link-hover">
               <Link to="/signup" className="header__link">
@@ -34,13 +35,14 @@ function Header({onBurgerClick }) {
                 Войти
               </Link>
             </li>
-          </ul>) : (
+          </ul>)}
+          {(path === '/' && isLoggedIn) && (
             <>
+              <Navigation />
               <Account />
               <button onClick={onBurgerClick} className='header__burger link-hover'><img className='header__burger-img' src={burger} alt='бургер меню'/></button>
             </>
           )}
-        </nav>
       </div>
     </header>
   );

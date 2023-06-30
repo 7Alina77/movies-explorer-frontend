@@ -1,13 +1,13 @@
 import './MoviesCard.css';
 import save from '../../images/save.svg';
 import saved from '../../images/saved.svg';
-import delele from '../../images/delete.svg';
+import deleteCard from '../../images/delete.svg';
 import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { convertTime } from '../../utils/common';
 import { MOVIES_URL } from '../../utils/constants';
 
-function MoviesCard({onCardLike, onCardClick, card, handleSaveCard, handleDeleteCard }) {
+function MoviesCard({onCardLike, onCardClick, card, onCardDelete }) {
   const location = useLocation();
   const path = location.pathname;
   const [savedCard, setIsSavedCard ] = useState(false);
@@ -18,7 +18,7 @@ function MoviesCard({onCardLike, onCardClick, card, handleSaveCard, handleDelete
   }
 
   function handleClickDeleteCard() {
-    handleDeleteCard(card)
+    onCardDelete(card)
   }
 
   function handleOnCardClick() {
@@ -39,11 +39,11 @@ function MoviesCard({onCardLike, onCardClick, card, handleSaveCard, handleDelete
         )}
         {path === '/saved-movies' && (
           <button onClick={handleClickDeleteCard} className='movies-card__btn' type='button'>
-            <img className='movies-card__delete link-hover' src={delele} alt='значок удаления фильма'/>
+            <img className='movies-card__delete link-hover' src={deleteCard} alt='значок удаления фильма'/>
           </button>
         )}
       </div>
-      <img onClick={handleOnCardClick} className='movies-card__img' src={location.pathname === "/movies" ? `${MOVIES_URL}${card.image.url}` : `${card.image}`} alt='обложка фильма' />
+      <img onClick={handleOnCardClick} className='movies-card__img' src={`${MOVIES_URL}${card.image.url}`} alt='обложка фильма' />
     </section>
   )
 }

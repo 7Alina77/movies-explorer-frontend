@@ -15,7 +15,6 @@ import Login from '../Auth/Login';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import {CurrentUserContext} from '../../contexts/CurrentUserContext';
 import Profile from '../Profile/Profile';
-import * as auth from  '../../utils/auth.js';
 import { NewMainApi } from '../../utils/MainApi';
 import {NewMoviesApi} from '../../utils/MoviesApi';
 import { handleSearchMovies } from '../../utils/common';
@@ -70,11 +69,11 @@ function App() {
     }
   }, [ handleGetMovies]);  
 
-  useEffect(() => {
+  /**useEffect(() => {
     if(loggedIn) {
       handleGetAllMovies();
     }
-  },[loggedIn, handleGetAllMovies])
+  },[loggedIn, handleGetAllMovies])*/
 
   const handleBurger = () => {
     setIsBurger(!isBurger);
@@ -94,10 +93,11 @@ function App() {
   async function handleRegister(name, email, pass) {
     setIsLoaderActive(true);
     try {
-      const user = await NewMainApi.register(name, email, pass)
+      const user = await NewMainApi.register(name, email, pass);
       console.log(user);
       if(user) {
-        handleSetUserData(user);
+        setCurrentUser(user);
+        setLoggedIn(true);
         setIsSuccessInfoTooltipStatus({isSuccess:true, text:'Вы успешно зарегистрировались!'});
         setIsInfoTooltipOpen(true);
         navigate('/movies', {replace: true})
@@ -146,7 +146,7 @@ function App() {
   async function handleAuth(name, email) {
     setIsLoaderActive(true);
     try {
-      const user = await NewMainApi.login(name, email);
+      const user = await NewMainApi.authorize(name, email);
       if(user) {
         setLoggedIn(true);
         navigate('/movies', {replace: true});
@@ -168,7 +168,7 @@ function App() {
 
   async function handleSignOut() {
     try {
-      await NewMainApi.logOut();
+      await NewMainApi.logout();
       setLoggedIn(false);
       setCurrentUser(null);
       localStorage.clear();
@@ -195,14 +195,24 @@ function App() {
     }
   }
 
+  async function handleCardDelete(card) {
+    console.log(card)
+    try {
+      const cardToDelete = await NewMainApi.deleteMovie(card);
+      console.log(cardToDelete);
+    } catch(err) {
+      console.log(`Ошибка удаления: ${err}`)
+    }
+  }
+
   return (
     <div className='page'>
     {isLoaderActive ? (<Preloader />) : (
       <CurrentUserContext.Provider value={currentUser}>
         <Routes>
-          <Route path='/' element={<Landing onBurgerClick={handleBurger}/>}/>
+          <Route path='/' element={<Landing isLoggedIn={loggedIn} onBurgerClick={handleBurger}/>}/>
           <Route path='/movies' element={<Movies onCardLike={handleLikeMovie} onCardClick={handleCardClick} allFilms={searchedMovies} onSearch={handleGetAllMovies} isChecked={isChecked} onSwitchClick={handleChecked} onBurgerClick={handleBurger} />}/>
-          <Route path='/saved-movies' element={<SavedMovies onCardClick={handleCardClick} allFilms={searchedMovies} onSearch={handleGetAllMovies} isChecked={isChecked} onSwitchClick={handleChecked} onBurgerClick={handleBurger} />}/>
+          <Route path='/saved-movies' element={<SavedMovies onCardDelete={handleCardDelete} onCardClick={handleCardClick} allFilms={searchedMovies} onSearch={handleGetAllMovies} isChecked={isChecked} onSwitchClick={handleChecked} onBurgerClick={handleBurger} />}/>
           <Route path='/profile' element={<Profile onClick={handleSignOut} onUpdateUser={handleUpdateUserData} onBurgerClick={handleBurger} />}/>
           <Route path='/signin' element={<Login onSubmit={handleAuth}/>}/>
           <Route path='/signup' element={<Register onSubmit={handleRegister}/>}/>
