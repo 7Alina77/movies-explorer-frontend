@@ -4,8 +4,7 @@ class MainApi {
   constructor(url) {
     this._url = url;
     this._headers = {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json'
     }
   };
 
@@ -23,34 +22,39 @@ class MainApi {
     }
   }
 
-  register = (name, email, pass) => {
+  register = (name, email, password) => {
     return fetch(`${this._url}/signup`, {
       mode: 'no-cors',
       method: 'POST',
-      headers: this._headers,
-      body: JSON.stringify(name, email, pass)
+      headers:  this._headers,
+      body: JSON.stringify({name, email, password})
     })
     .then(this._checkResponse)
     .then((res) => {
+      console.log(res);
       return res;
     })
   }
 
-  login(name, email) {
+  login(email, password) {
     return fetch(`${this._url}/signin`, {
+      mode: 'no-cors',
       method: 'POST',
-      credentials: 'include',
       headers: this._headers,
-      body: JSON.stringify(name, email)
+      body: JSON.stringify({email, password})
     })
     .then(this._checkResponse)
-    .then((res) => {
-      return res;
+    .then((data) => {
+      if (data.token){
+        localStorage.setItem('token', data.token);
+        return data;
+      }
     })
   }
 
   getUserInfo() {
     return fetch(`${this._url}/users/me`, {
+      mode: 'no-cors',
       headers: this._checkHeaders(),
     })
     .then(this._checkResponse)
@@ -58,6 +62,7 @@ class MainApi {
 
   updateUserInfo({name, email}) {
     return fetch(`${this._url}/users/me`, {
+      mode: 'no-cors',
       method: 'PATCH',
       headers: this._checkHeaders(),
       body: JSON.stringify({name, email})
@@ -67,6 +72,7 @@ class MainApi {
 
   getSavedMovies() {
     return fetch(`${this._url}/movies`, {
+      mode: 'no-cors',
       headers: this._checkHeaders(),
     })
     .then(this._checkResponse)
@@ -74,6 +80,7 @@ class MainApi {
 
   deleteMovie(id) {
     return fetch(`${this._url}/movies/${id}`, {
+      mode: 'no-cors',
       method: 'DELETE',
       headers: this._checkHeaders(),
     })
@@ -81,7 +88,9 @@ class MainApi {
   }
 
   saveMovie(body) {
+    console.log(body)
     return fetch(`${this._url}/movies`, {
+      mode: 'no-cors',
       method: 'POST',
       headers: this._checkHeaders(),
       body: JSON.stringify(body)
@@ -92,6 +101,7 @@ class MainApi {
 
   logOut() {
     return fetch(`${this._url}/signout`, {
+      mode: 'no-cors',
       method: 'POST',
       headers: this._headers
     })

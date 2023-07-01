@@ -7,6 +7,24 @@ function MoviesCardList({onCardLike, onCardClick, onCardDelete, allFilms}) {
   const location = useLocation();
   const path = location.pathname;
   const [filmsForRender, setFilmsForRender] = useState([]);
+  const [step, setStep ] = useState(3);
+  const [filmsOnDisplay, setFilmsOnDisplay] = useState(12);
+
+  function resizeScreen() {
+    const width = window.innerWidth;
+    if(width < 768) {
+      setFilmsOnDisplay(8);
+      setStep(2);
+    }
+    if(width < 480) {
+      setFilmsOnDisplay(5);
+      setStep(2);
+    }
+  }
+
+  window.addEventListener('resize', function() {
+    resizeScreen();
+  });
 
   useEffect(() => {
     if(filmsForRender !== 0) {
@@ -17,8 +35,7 @@ function MoviesCardList({onCardLike, onCardClick, onCardDelete, allFilms}) {
   async function handleOnCardDelete(cardToDelete) {
     onCardDelete(cardToDelete)
     const newFilmsForRender = await filmsForRender.filter((film) => JSON.stringify(film) !== JSON.stringify(cardToDelete));
-    console.log(newFilmsForRender)
-    setFilmsForRender(newFilmsForRender)
+    console.log(newFilmsForRender);
   }
 
   return (
@@ -28,8 +45,8 @@ function MoviesCardList({onCardLike, onCardClick, onCardDelete, allFilms}) {
       ) : (
         <>
           <div className='movies-list__items'>
-            {filmsForRender.length >= 1 && (
-              filmsForRender.map((card) => {
+            {filmsForRender.length && (
+              filmsForRender.slice(0, filmsOnDisplay).map((card) => {
                 return (
                 <MoviesCard 
                   onCardLike={onCardLike}
@@ -54,7 +71,7 @@ function MoviesCardList({onCardLike, onCardClick, onCardDelete, allFilms}) {
               })
             )}
           </div>
-          {path === '/movies' && <button className='movies-list__btn link-hover' type='button'>Еще</button>}
+          {path === '/movies' && <button onClick={()=> setFilmsOnDisplay(filmsOnDisplay + step)} className='movies-list__btn link-hover' type='button'>Еще</button>}
         </>
       )
       }

@@ -2,7 +2,6 @@ import './Profile.css';
 import React from 'react';
 import Header from '../Header/Header';
 import { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 function Profile({onClick, onUpdateUser, onBurgerClick}) {
@@ -14,14 +13,15 @@ function Profile({onClick, onUpdateUser, onBurgerClick}) {
   const [nameDirty, setNameDirty] = useState(false);
   const [emailDirty, setEmailDirty] = useState(false);
   const [disabled, setDisabled] = useState(true);
+  const [disabledOfSave, setDisabledOfSave ] = useState(true);
 
   function handleDisabled() {
     setDisabled(!disabled);
   }
 
   function handleSave(e) {
-    setDisabled(!disabled);
-    handleSubmit(e);
+      setDisabled(!disabled);
+      handleSubmit(e);
   }
   
   useEffect(() => {
@@ -45,24 +45,26 @@ function Profile({onClick, onUpdateUser, onBurgerClick}) {
   function handleChangeName(e) {
     setName(e.target.value);
     if(e.target.name === 'name' && e.target.validationMessage) {
-      setNameError('Упс! Ошибка');
+      setNameError(e.target.validationMessage);
       if(!e.target.value) {
         setNameError('Заполните поле')
       }
     } else {
-      setNameError('')
+      setNameError('');
+      setDisabledOfSave(!disabledOfSave);
     }
   }
 
   function handleChangeEmail(e) {
     setEmail(e.target.value);
     if(e.target.name === 'email' && !e.target.validity.valid) {
-      setEmailError('Упс! Ошибка');
+      setEmailError(e.target.validationMessage);
       if(!e.target.value) {
         setEmailError('Заполните поле')
       }
     } else {
       setEmailError('');
+      setDisabledOfSave(!disabledOfSave)
     }
   }
 
@@ -87,7 +89,7 @@ function Profile({onClick, onUpdateUser, onBurgerClick}) {
                 <label className='profile__label'>Имя</label>
                 <input required className='profile__input'
                   disabled={disabled}
-                  maxLength={10}
+                  maxLength={30}
                   minLength={3}
                   value={name}
                   onBlur={e => blurHandler(e)}
@@ -114,7 +116,7 @@ function Profile({onClick, onUpdateUser, onBurgerClick}) {
           {disabled === true ? (
             <button onClick={handleDisabled} className='profile__submit link-hover' type="button">Редактировать</button>
           ) : (
-            <button onClick={handleSave} className='profile__submit link-hover' type="submit">Сохранить</button>
+            <button onClick={handleSave} className={`profile__submit link-hover ${disabledOfSave && `profile__submit_type_active`}`} type="submit">Сохранить</button>
           )}
           <button onClick={onClick} className="profile__link link link-hover">Выйти из аккаунта</button>
     </section>

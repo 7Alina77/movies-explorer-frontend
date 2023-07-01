@@ -115,6 +115,11 @@
   line-height: 16px;
 }
 
+.profile__submit_type_active {
+  opacity: .5;
+  pointer-events: none;
+}
+
 .profile__link {
   text-align: center;
   color: #EE3465;
