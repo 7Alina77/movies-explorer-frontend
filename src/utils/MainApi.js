@@ -4,8 +4,7 @@ class MainApi {
   constructor(url) {
     this._url = url;
     this._headers = {
-      'Accept-Encoding': 'gzip, deflate, br',
-      'Accept': '*/*',
+      'Accept': 'application/json',
       'Content-Type': 'application/json'
     }
   };
@@ -24,13 +23,15 @@ class MainApi {
     }
   }
 
-  register = (name, email, password) => {
-    console.log(name, email, password)
+  register(name, email, password) {
     return fetch(`${this._url}/signup`, {
       mode: 'no-cors',
       method: 'POST',
-      headers:  this._headers,
-      body: JSON.stringify(name, email, password)
+      headers:  {
+        'Accept': '*/*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({name, email, password})
     })
     .then(this._checkResponse)
     .then((res) => {
@@ -43,7 +44,10 @@ class MainApi {
     return fetch(`${this._url}/signin`, {
       mode: 'no-cors',
       method: 'POST',
-      headers: this._headers,
+      headers:  {
+        'Accept': '*/*',
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({email, password})
     })
     .then(this._checkResponse)
