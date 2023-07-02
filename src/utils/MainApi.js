@@ -4,6 +4,8 @@ class MainApi {
   constructor(url) {
     this._url = url;
     this._headers = {
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Accept': '*/*',
       'Content-Type': 'application/json'
     }
   };
@@ -23,11 +25,12 @@ class MainApi {
   }
 
   register = (name, email, password) => {
+    console.log(name, email, password)
     return fetch(`${this._url}/signup`, {
       mode: 'no-cors',
       method: 'POST',
       headers:  this._headers,
-      body: JSON.stringify({name, email, password})
+      body: JSON.stringify(name, email, password)
     })
     .then(this._checkResponse)
     .then((res) => {

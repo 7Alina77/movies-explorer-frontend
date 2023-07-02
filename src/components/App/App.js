@@ -119,6 +119,7 @@ function App() {
     setIsLoaderActive(true);
     try {
       const user = await NewMainApi.register(name, email, pass);
+      console.log(user);
       if(user) {
         const auth = await handleAuth(email, pass);
         setCurrentUser(user);
