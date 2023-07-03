@@ -2,13 +2,24 @@ import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import search from '../../images/search.svg';
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 
-function SearchForm({ handleOnSearch, isChecked, onSwitchClick}) {
+function SearchForm({ handleOnSearch, isCheckedOnMovies, isCheckedOnSavedMovies, onSwitchClick}) {
+  const location = useLocation();
+  const path = location.pathname;
   const [searchError, setSearchError] = useState('');
   const [searchDirty, setSearchDirty] = useState(false);
   const [formValue, setFormValue] = useState({search: ''});
   const [formValid, setFormValid] = useState(false);
+  const [searchOnMovies, setSearchOnMovies] = useState('')
+
+  useEffect(() => {
+    if(path === '/movies') {
+      const searchOnMovies = localStorage.getItem('moviesSearchOnMovies')
+      setSearchOnMovies(searchOnMovies);
+    }
+  },[setSearchOnMovies, path]);
 
   useEffect((e) => {
     if(searchError || !searchDirty) {
@@ -64,7 +75,7 @@ function SearchForm({ handleOnSearch, isChecked, onSwitchClick}) {
         </button>
       </form>
       <p className={`search-form__validate ${(searchDirty && searchError) && `search-form__validate_state_active`}`}>{searchError}</p>
-      <FilterCheckbox isChecked={isChecked} onSwitchClick={onSwitchClick}/>
+      <FilterCheckbox isCheckedOnMovies={isCheckedOnMovies} isCheckedOnSavedMovies={isCheckedOnSavedMovies} onSwitchClick={onSwitchClick}/>
       <hr className='search-form__line' />
     </section>
   )

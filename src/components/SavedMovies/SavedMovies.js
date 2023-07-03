@@ -3,21 +3,20 @@ import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
-function SavedMovies({onCardClick, onCardDelete, allFilms, onSearch, isChecked, onSwitchClick, onBurgerClick}) {
-  const [filmsForRender, setFilmsForRender] =useState([]);
+function SavedMovies({onCardClick, onCardDelete, allFilms, onSearch, isCheckedOnSavedMovies, onSwitchClick, onBurgerClick}) {
 
-  const handleOnSearch = useCallback(async ( search) => {
-    const moviesSearch = await onSearch(search);
-  },[onSearch]);
+  function handleOnSearch( search) {
+    onSearch(search);
+  };
 
   return (
     <section className='saved-movies'>
       <Header onBurgerClick={onBurgerClick}/>
       <main>
-        <SearchForm handleOnSearch={handleOnSearch} isChecked={isChecked} onSwitchClick={onSwitchClick}/>
-        <MoviesCardList onCardDelete={onCardDelete} onCardClick={onCardClick} allFilms={allFilms} />
+        <SearchForm handleOnSearch={handleOnSearch} isCheckedOnSavedMovies={isCheckedOnSavedMovies} onSwitchClick={onSwitchClick}/>
+        <MoviesCardList onCardDelete={onCardDelete} onCardClick={onCardClick} allSavedFilms={allFilms} />
       </main>
       <Footer />
     </section>

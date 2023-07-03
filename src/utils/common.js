@@ -10,29 +10,19 @@ export function convertTime(time) {
   }
 }
 
-export function handleSearchMovies(movies, search, isSaved) {
+export function handleSearchMovies(movies, search) {
   const toLowerCaseSearch = search.toLowerCase().trim();
   const data = movies.filter((movie) => {
     const commonNameEn = movie.nameEN.toLowerCase().trim();
     const commonNameRu = movie.nameRU.toLowerCase().trim();
     return ( commonNameEn.includes(toLowerCaseSearch) || commonNameRu.includes(toLowerCaseSearch))
   })
-  if(isSaved) {
-    localStorage.setItem('savedMoviesSearch', toLowerCaseSearch);
-  } else {
-    localStorage.setItem('searchedMovies', JSON.stringify(data));
-    localStorage.setItem('moviesSearch', toLowerCaseSearch);
-  }
+  /**if(isSaved) {
+    localStorage.setItem('savedMoviesSearch', toLowerCaseSearch);*/
   return data;
 }
 
-export function handleFilterByTime(movies) {
-  if(movies) {
-    movies.filter((movie) => {
-      const shortMovies = movie.duration <= SHORT_MOVIE;
-      return shortMovies;
-    })
-  } else {
-    return movies;
-  }
+export function handleFilterMoviesByTime(movies) {
+  const shortMovies = movies.filter((movie) => movie.duration <= SHORT_MOVIE);
+  return shortMovies;
 }

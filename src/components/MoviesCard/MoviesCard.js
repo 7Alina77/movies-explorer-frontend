@@ -3,14 +3,24 @@ import save from '../../images/save.svg';
 import saved from '../../images/saved.svg';
 import deleteCard from '../../images/delete.svg';
 import { useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { convertTime } from '../../utils/common';
 import { MOVIES_URL } from '../../utils/constants';
 
-function MoviesCard({onCardLike, onCardClick, card, onCardDelete }) {
+function MoviesCard({filteredMovies, onCardLike, onCardClick, card, onCardDelete }) {
   const location = useLocation();
   const path = location.pathname;
   const [savedCard, setIsSavedCard ] = useState(false);
+  const searchedMovies =  JSON.parse(localStorage.getItem('filteredMoviesOnMovies'));
+
+  useEffect(() => {
+    if(searchedMovies.length !== 0) {
+      const savedMovie = searchedMovies.filter((movie) => movie.id === card.id)
+      if(savedMovie) {
+        setIsSavedCard(true)
+      }
+    }
+  },[card.id, searchedMovies])
 
   function handleClickSaveCard() {
     onCardLike(card);

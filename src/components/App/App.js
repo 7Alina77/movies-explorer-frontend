@@ -18,15 +18,20 @@ import Profile from '../Profile/Profile';
 import { NewMainApi } from '../../utils/MainApi';
 import {NewMoviesApi} from '../../utils/MoviesApi';
 import { handleSearchMovies } from '../../utils/common';
+import { handleFilterByTime } from '../../utils/common';
+import {handleFilterMoviesByTime} from '../../utils/common';
+import { MOVIES_URL } from '../../utils/constants';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isBurger, setIsBurger] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
+  const [isCheckedOnMovies, setIsCheckedOnMovies] = useState(false);
+  const [isCheckedOnSavedMovies, setIsCheckedOnSavedMovies] = useState(false);
   const [initialMovies, setInitialMovies] = useState([]);
+  const [filteredMovies, setFilteredMovies] = useState([]);
+  const [shortMovies, setShortMovies] = useState([]);
   const [savedMovies, setSavedMovies ] = useState([]);
-  const [searchedMovies, setSearchedMovies] = useState([]);
   const [isLoaderActive, setIsLoaderActive] = useState(false);
   const [isInfoTooltipOpen ,setIsInfoTooltipOpen] = useState(false);
   const [isSuccessInfoTooltipStatus, setIsSuccessInfoTooltipStatus] = useState({
@@ -59,22 +64,22 @@ function App() {
   },[handleSetUserData]);
  
   //Сохраняем все фильмы при поиске
-  const handleGetAllMovies = useCallback(async () => {
-    setIsLoaderActive(true);
+  const handleGetAllMovies = useCallback(async (search) => {
     try {
-      const movies = NewMoviesApi.getMovies();
+      const movies = await NewMoviesApi.getMovies();
+      setInitialMovies(movies);
       if(movies) {
-        setInitialMovies(movies);
+        const filteredMovies = handleSearchMovies(movies, search);
+        localStorage.setItem('filteredMoviesOnMovies',JSON.stringify(filteredMovies))
+        setFilteredMovies(filteredMovies);
         return movies;
       }
     } catch(err) {
       setIsSuccessInfoTooltipStatus({isSuccess: false, text:'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'});
       setIsInfoTooltipOpen(true);
       console.log(`Ошибка получения фильмов: ${err}`)
-    } finally {
-      setIsLoaderActive(false);
     }
-  }, []); 
+  }, []);
   
   //Получаем те фильмы, которые юзер сохранил
   const handleGetSavedMovies = useCallback(async () => {
@@ -97,29 +102,27 @@ function App() {
     }
   },[handleGetSavedMovies, loggedIn])
 
-  const handleBurger = () => {
-    setIsBurger(!isBurger);
-  };
-
   //Сохраняем в локалсторадж состояние переключателя на каждой странице и меняем состояние кнопки
   const handleChecked = () => {
-    setIsChecked(!isChecked);
-    localStorage.setItem('isShortMoviesOn', !isChecked);
-    if(path==='/movies') {
-      localStorage.setItem('isShortMoviesOnMovies', !isChecked);
-    } 
+    if(path === '/movies') {
+      setIsCheckedOnMovies(!isCheckedOnMovies);
+      localStorage.setItem('isCheckedShortMoviesOnMovies', !isCheckedOnMovies);
+      if(!isCheckedOnMovies) {
+        const shortMovies = handleFilterMoviesByTime(filteredMovies);
+        setShortMovies(shortMovies);
+        localStorage.setItem('shortMoviesOnMovies', JSON.stringify(shortMovies))
+      }
+    }
     if(path==='/saved-movies') {
-      localStorage.setItem('isShortMoviesOnSavedMovies', !isChecked)
+      localStorage.setItem('isCheckedShortMoviesOnSavedMovies', !isCheckedOnSavedMovies)
     }
   };
-
 
   //Регистрация пользователя
   async function handleRegister(name, email, pass) {
     setIsLoaderActive(true);
     try {
       const user = await NewMainApi.register(name, email, pass);
-      console.log(user);
       if(user) {
         const auth = await handleAuth(email, pass);
         setCurrentUser(user);
@@ -203,10 +206,27 @@ function App() {
     window.open(card.trailerLink);
   }
 
+  //Открываем/закрываем бургер меню
+  const handleBurger = () => {
+    setIsBurger(!isBurger);
+  };
+
   //Сохранение фильма
   async function handleLikeMovie(card) {
     try {
-      const savedMovie = await NewMainApi.saveMovie(card);
+      const savedMovie = await NewMainApi.saveMovie({
+        country: card.country,
+        director: card.director,
+        duration: card.duration,
+        year: card.year,
+        description: card.description,
+        image: `${MOVIES_URL}${card.image.url}`,
+        trailerLink: card.trailerLink,
+        thumbnail: `${MOVIES_URL}${card.image.formats.thumbnail.url}`,
+        movieId: card.id,
+        nameRU: card.nameRU,
+        nameEN: card.nameEN,
+      });
       console.log(savedMovie);
       if(savedMovie) {
         setSavedMovies([savedMovie, ...savedMovies])
@@ -219,23 +239,19 @@ function App() {
   //Удаление фильма
   async function handleCardDelete(card) {
     console.log(card)
-    const movieToDelete = savedMovies.find((movie) => card.movieId === movie.id);
+    const movieToDelete = savedMovies.find((movie) =>card._id !== movie._id);
     console.log(movieToDelete);
     try {
       const cardToDelete = await NewMainApi.deleteMovie(movieToDelete._id);
       console.log(cardToDelete);
       if(cardToDelete) {
-        setSavedMovies((data) => 
-        console.log(data))
-        /**data.filter((card) => {
-          card._id !== movieToDelete._id
-        })
-        )*/
+        setSavedMovies((data) => data.filter((card) => card._id !== movieToDelete._id)
+        )
       }
     } catch(err) {
       console.log(`Ошибка удаления: ${err}`)
     }
-  }
+  };
 
   return (
     <div className='page'>
@@ -243,8 +259,8 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
         <Routes>
           <Route path='/' element={<Landing isLoggedIn={loggedIn} onBurgerClick={handleBurger}/>}/>
-          <Route path='/movies' element={<Movies onCardLike={handleLikeMovie} onCardClick={handleCardClick} allFilms={initialMovies} onSearch={handleGetAllMovies} isChecked={isChecked} onSwitchClick={handleChecked} onBurgerClick={handleBurger} />}/>
-          <Route path='/saved-movies' element={<SavedMovies onCardDelete={handleCardDelete} onCardClick={handleCardClick} allFilms={searchedMovies} onSearch={handleGetAllMovies} isChecked={isChecked} onSwitchClick={handleChecked} onBurgerClick={handleBurger} />}/>
+          <Route path='/movies' element={<Movies filteredMovies={filteredMovies} onCardLike={handleLikeMovie} onCardClick={handleCardClick} allFilms={initialMovies} onSearch={handleGetAllMovies} isCheckedOnMovies={isCheckedOnMovies} onSwitchClick={handleChecked} onBurgerClick={handleBurger} shortMovies={shortMovies}/>}/>
+          <Route path='/saved-movies' element={<SavedMovies onCardDelete={handleCardDelete} onCardClick={handleCardClick} allFilms={savedMovies} onSearch={handleGetAllMovies} isCheckedOnSavedMovies={isCheckedOnSavedMovies} onSwitchClick={handleChecked} onBurgerClick={handleBurger} />}/>
           <Route path='/profile' element={<Profile onClick={handleSignOut} onUpdateUser={handleUpdateUserData} onBurgerClick={handleBurger} />}/>
           <Route path='/signin' element={<Login onSubmit={handleAuth}/>}/>
           <Route path='/signup' element={<Register onSubmit={handleRegister}/>}/>
