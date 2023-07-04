@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react';
 import { handleSearchMovies } from '../../utils/common';
 
-function Movies({filteredMovies, shortMovies, onCardLike, onCardClick, allFilms, onSearch, isCheckedOnMovies, onSwitchClick, onBurgerClick}) {
+function Movies({ shortMovies, onCardLike, onCardClick, allFilms, onSearch, isCheckedOnMovies, onSwitchClick, onBurgerClick}) {
   const location = useLocation();
   const path = location.pathname;
   const [filmsForRender, setFilmsForRender] = useState([]);
@@ -41,7 +41,7 @@ function Movies({filteredMovies, shortMovies, onCardLike, onCardClick, allFilms,
       <Header onBurgerClick={onBurgerClick}/>
       <main>
         <SearchForm handleOnSearch={handleOnSearch} isCheckedOnMovies={isCheckedOnMovies} onSwitchClick={onSwitchClick}/>
-        <MoviesCardList filteredMovies={filteredMovies} isCheckedOnMovies={isCheckedOnMovies} shortFilms={shortMovies} onCardLike={onCardLike} onCardClick={onCardClick} allSearchedFilms={filmsForRender}/>
+        <MoviesCardList isCheckedOnMovies={isCheckedOnMovies} shortFilms={shortMovies} onCardLike={onCardLike} onCardClick={onCardClick} allSearchedFilms={filmsForRender}/>
       </main>
       <Footer />
     </section>

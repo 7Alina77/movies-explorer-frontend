@@ -90,8 +90,6 @@ function App() {
       }
     } catch(err) {
       console.log(`Ошибка получения фильмов юзера: ${err}`)
-    } finally {
-      setIsLoaderActive(false);
     }
   },[])
 
@@ -107,14 +105,24 @@ function App() {
     if(path === '/movies') {
       setIsCheckedOnMovies(!isCheckedOnMovies);
       localStorage.setItem('isCheckedShortMoviesOnMovies', !isCheckedOnMovies);
-      if(!isCheckedOnMovies) {
+      if(isCheckedOnMovies === true) {
         const shortMovies = handleFilterMoviesByTime(filteredMovies);
         setShortMovies(shortMovies);
         localStorage.setItem('shortMoviesOnMovies', JSON.stringify(shortMovies))
+      } else if (isCheckedOnMovies === false) {
+        setInitialMovies(initialMovies);
       }
     }
     if(path==='/saved-movies') {
       localStorage.setItem('isCheckedShortMoviesOnSavedMovies', !isCheckedOnSavedMovies)
+      setIsCheckedOnSavedMovies(!isCheckedOnSavedMovies);
+      if(isCheckedOnSavedMovies === true) {
+        const shortMovie = handleFilterMoviesByTime(savedMovies);
+        setShortMovies(shortMovie);
+        if(shortMovies.length === 0) {
+          setSavedMovies(shortMovies);
+        }
+      }
     }
   };
 
@@ -227,7 +235,6 @@ function App() {
         nameRU: card.nameRU,
         nameEN: card.nameEN,
       });
-      console.log(savedMovie);
       if(savedMovie) {
         setSavedMovies([savedMovie, ...savedMovies])
       }
@@ -259,7 +266,7 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
         <Routes>
           <Route path='/' element={<Landing isLoggedIn={loggedIn} onBurgerClick={handleBurger}/>}/>
-          <Route path='/movies' element={<Movies filteredMovies={filteredMovies} onCardLike={handleLikeMovie} onCardClick={handleCardClick} allFilms={initialMovies} onSearch={handleGetAllMovies} isCheckedOnMovies={isCheckedOnMovies} onSwitchClick={handleChecked} onBurgerClick={handleBurger} shortMovies={shortMovies}/>}/>
+          <Route path='/movies' element={<Movies onCardLike={handleLikeMovie} onCardClick={handleCardClick} allFilms={initialMovies} onSearch={handleGetAllMovies} isCheckedOnMovies={isCheckedOnMovies} onSwitchClick={handleChecked} onBurgerClick={handleBurger} shortMovies={shortMovies}/>}/>
           <Route path='/saved-movies' element={<SavedMovies onCardDelete={handleCardDelete} onCardClick={handleCardClick} allFilms={savedMovies} onSearch={handleGetAllMovies} isCheckedOnSavedMovies={isCheckedOnSavedMovies} onSwitchClick={handleChecked} onBurgerClick={handleBurger} />}/>
           <Route path='/profile' element={<Profile onClick={handleSignOut} onUpdateUser={handleUpdateUserData} onBurgerClick={handleBurger} />}/>
           <Route path='/signin' element={<Login onSubmit={handleAuth}/>}/>

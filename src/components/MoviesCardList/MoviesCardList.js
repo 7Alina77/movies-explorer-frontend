@@ -2,8 +2,10 @@ import './MoviesCardList.css';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react';
+import Preloader from '../Preloader/Preloader';
+import { handleFilterMoviesByTime } from '../../utils/common';
 
-function MoviesCardList({filteredMovies,  isCheckedOnMovies, isCheckedOnSavedMovies, shortFilms, onCardLike, onCardClick, onCardDelete, allSearchedFilms, allSavedFilms}) {
+function MoviesCardList({  isCheckedOnMovies, isCheckedOnSavedMovies, shortFilms, onCardLike, onCardClick, onCardDelete, allSearchedFilms, allSavedFilms}) {
   const location = useLocation();
   const path = location.pathname;
   const [filmsForRender, setFilmsForRender] = useState([]);
@@ -41,7 +43,6 @@ function MoviesCardList({filteredMovies,  isCheckedOnMovies, isCheckedOnSavedMov
         }
       }
     } else if(path === '/movies' && isCheckedOnMovies === true) {
-      console.log(shortFilms)
       if(shortFilms.length > 0){
         setFilmsForRender(shortFilms);
       } else {
@@ -51,11 +52,13 @@ function MoviesCardList({filteredMovies,  isCheckedOnMovies, isCheckedOnSavedMov
   },[path, isCheckedOnMovies,shortFilms, allSearchedFilms]);
 
   useEffect(() => {
-    if(path === '/saved-movies'){
-      console.log(allSavedFilms);
+    if(path === '/saved-movies' && !isCheckedOnSavedMovies){
       setFilmsForRender(allSavedFilms);
+    } else if (path === '/saved-movies' && isCheckedOnSavedMovies) {
+      const savedFilmsForRender = handleFilterMoviesByTime(allSavedFilms);
+      console.log(savedFilmsForRender)
     }
-  },[ path, allSavedFilms])
+  },[ path, allSavedFilms, isCheckedOnSavedMovies])
 
   async function handleOnCardDelete(cardToDelete) {
     onCardDelete(cardToDelete)
@@ -70,11 +73,10 @@ function MoviesCardList({filteredMovies,  isCheckedOnMovies, isCheckedOnSavedMov
       ) : (
         <>
           <div className='movies-list__items'>
-            {filmsForRender.length && (
-              filmsForRender.slice(0, filmsOnDisplay).map((card) => {
+            {filmsForRender.length ? (
+              filmsForRender.slice(0, filmsOnDisplay).map((card) => { 
                 return (
                 <MoviesCard 
-                  filteredMovies={filteredMovies}
                   onCardLike={onCardLike}
                   onCardClick={onCardClick}
                   onCardDelete={handleOnCardDelete}
@@ -94,6 +96,8 @@ function MoviesCardList({filteredMovies,  isCheckedOnMovies, isCheckedOnSavedMov
                   nameEN = {card.nameEN} 
                 />)
               })
+            ) : (
+              <Preloader />
             )}
           </div>
           {(path === '/movies' && (filmsForRender.length > 3 && filmsForRender.length < allSearchedFilms)) && <button onClick={()=> setFilmsOnDisplay(filmsOnDisplay + step)} className='movies-list__btn link-hover' type='button'>Еще</button>}
