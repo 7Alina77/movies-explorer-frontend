@@ -21,6 +21,7 @@ import { handleSearchMovies } from '../../utils/common';
 import { handleFilterByTime } from '../../utils/common';
 import {handleFilterMoviesByTime} from '../../utils/common';
 import { MOVIES_URL } from '../../utils/constants';
+import { handleLikeCard } from '../../utils/common';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -33,6 +34,7 @@ function App() {
   const [shortMovies, setShortMovies] = useState([]);
   const [savedMovies, setSavedMovies ] = useState([]);
   const [isLoaderActive, setIsLoaderActive] = useState(false);
+  const [errorOfAuth, setErrorOfAuth] = useState('');
   const [isInfoTooltipOpen ,setIsInfoTooltipOpen] = useState(false);
   const [isSuccessInfoTooltipStatus, setIsSuccessInfoTooltipStatus] = useState({
     isSuccess: true,
@@ -69,9 +71,9 @@ function App() {
       const movies = await NewMoviesApi.getMovies();
       setInitialMovies(movies);
       if(movies) {
-        const filteredMovies = handleSearchMovies(movies, search);
-        localStorage.setItem('filteredMoviesOnMovies',JSON.stringify(filteredMovies))
-        setFilteredMovies(filteredMovies);
+        const filteredMoviesList = await handleSearchMovies(movies, search);
+        localStorage.setItem('filteredMoviesOnMovies',JSON.stringify(filteredMoviesList))
+        setFilteredMovies(filteredMoviesList);
         return movies;
       }
     } catch(err) {
@@ -80,6 +82,13 @@ function App() {
       console.log(`Ошибка получения фильмов: ${err}`)
     }
   }, []);
+
+  useEffect(() => {
+    if(filteredMovies) {
+      const shortMoviesList = handleFilterMoviesByTime(filteredMovies);
+      setShortMovies(shortMoviesList);
+    }
+  },[filteredMovies]);
   
   //Получаем те фильмы, которые юзер сохранил
   const handleGetSavedMovies = useCallback(async () => {
@@ -98,24 +107,22 @@ function App() {
     if(loggedIn) {
       handleGetSavedMovies();
     }
-  },[handleGetSavedMovies, loggedIn])
+  },[handleGetSavedMovies, loggedIn]);
 
   //Сохраняем в локалсторадж состояние переключателя на каждой странице и меняем состояние кнопки
   const handleChecked = () => {
     if(path === '/movies') {
-      setIsCheckedOnMovies(!isCheckedOnMovies);
+      setIsCheckedOnMovies(!isCheckedOnMovies); 
       localStorage.setItem('isCheckedShortMoviesOnMovies', !isCheckedOnMovies);
-      if(isCheckedOnMovies === true) {
-        const shortMovies = handleFilterMoviesByTime(filteredMovies);
-        setShortMovies(shortMovies);
-        localStorage.setItem('shortMoviesOnMovies', JSON.stringify(shortMovies))
-      } else if (isCheckedOnMovies === false) {
-        setInitialMovies(initialMovies);
+      if(isCheckedOnMovies) {
+        const shortMovie = handleFilterMoviesByTime(filteredMovies);
+        console.log(shortMovie)
+        setShortMovies(shortMovie);
       }
     }
     if(path==='/saved-movies') {
-      localStorage.setItem('isCheckedShortMoviesOnSavedMovies', !isCheckedOnSavedMovies)
       setIsCheckedOnSavedMovies(!isCheckedOnSavedMovies);
+      localStorage.setItem('isCheckedShortMoviesOnSavedMovies', !isCheckedOnSavedMovies)
       if(isCheckedOnSavedMovies === true) {
         const shortMovie = handleFilterMoviesByTime(savedMovies);
         setShortMovies(shortMovie);
@@ -125,6 +132,13 @@ function App() {
       }
     }
   };
+
+  useEffect(() => {
+    if(path === '/movies' && isCheckedOnMovies === false) {
+      const filteredMovies = JSON.parse(localStorage.getItem('filteredMoviesOnMovies'));
+      setFilteredMovies(filteredMovies);
+    }
+  },[path, isCheckedOnMovies])
 
   //Регистрация пользователя
   async function handleRegister(name, email, pass) {
@@ -140,6 +154,7 @@ function App() {
         navigate('/movies', {replace: true})
       }
     } catch (err) {
+        setErrorOfAuth(err);
         setIsSuccessInfoTooltipStatus({isSuccess: false, text:'Что-то пошло не так! Попробуйте ещё раз.'});
         setIsInfoTooltipOpen(true);
         console.log(err);
@@ -196,6 +211,7 @@ function App() {
         setIsInfoTooltipOpen(true);
       }
     } catch (err) {
+      setErrorOfAuth(err);
       setIsSuccessInfoTooltipStatus({isSuccess: false, text:'Что-то пошло не так! Попробуйте ещё раз.'});
       setIsInfoTooltipOpen(true);
       console.log(err);
@@ -245,12 +261,9 @@ function App() {
 
   //Удаление фильма
   async function handleCardDelete(card) {
-    console.log(card)
-    const movieToDelete = savedMovies.find((movie) =>card._id !== movie._id);
-    console.log(movieToDelete);
+    const movieToDelete = savedMovies.find((movie) => card._id === movie._id || card.movieId === movie.movieId );
     try {
       const cardToDelete = await NewMainApi.deleteMovie(movieToDelete._id);
-      console.log(cardToDelete);
       if(cardToDelete) {
         setSavedMovies((data) => data.filter((card) => card._id !== movieToDelete._id)
         )
@@ -266,11 +279,11 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
         <Routes>
           <Route path='/' element={<Landing isLoggedIn={loggedIn} onBurgerClick={handleBurger}/>}/>
-          <Route path='/movies' element={<Movies onCardLike={handleLikeMovie} onCardClick={handleCardClick} allFilms={initialMovies} onSearch={handleGetAllMovies} isCheckedOnMovies={isCheckedOnMovies} onSwitchClick={handleChecked} onBurgerClick={handleBurger} shortMovies={shortMovies}/>}/>
+          <Route path='/movies' element={<Movies onCardLike={handleLikeMovie} onCardClick={handleCardClick} allFilms={filteredMovies} onSearch={handleGetAllMovies} isCheckedOnMovies={isCheckedOnMovies} onSwitchClick={handleChecked} onBurgerClick={handleBurger} shortMovies={shortMovies}/>}/>
           <Route path='/saved-movies' element={<SavedMovies onCardDelete={handleCardDelete} onCardClick={handleCardClick} allFilms={savedMovies} onSearch={handleGetAllMovies} isCheckedOnSavedMovies={isCheckedOnSavedMovies} onSwitchClick={handleChecked} onBurgerClick={handleBurger} />}/>
-          <Route path='/profile' element={<Profile onClick={handleSignOut} onUpdateUser={handleUpdateUserData} onBurgerClick={handleBurger} />}/>
+          <Route path='/profile' element={<Profile errorOfAuth={errorOfAuth} onClick={handleSignOut} onUpdateUser={handleUpdateUserData} onBurgerClick={handleBurger} />}/>
           <Route path='/signin' element={<Login onSubmit={handleAuth}/>}/>
-          <Route path='/signup' element={<Register onSubmit={handleRegister}/>}/>
+          <Route path='/signup' element={<Register errorOfAuth={errorOfAuth} onSubmit={handleRegister}/>}/>
           <Route path='*' element={<NotFound />}/>
         </Routes>
         <BurgerMenu isBurger={isBurger} onClose={handleBurger}/>

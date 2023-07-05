@@ -4,7 +4,7 @@ import Header from '../Header/Header';
 import { useState, useEffect } from 'react';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-function Profile({onClick, onUpdateUser, onBurgerClick}) {
+function Profile({errorOfAuth, onClick, onUpdateUser, onBurgerClick}) {
   const currentUser = React.useContext(CurrentUserContext);
   const [name,setName] = useState('');
   const [email, setEmail] = useState('');
@@ -113,6 +113,7 @@ function Profile({onClick, onUpdateUser, onBurgerClick}) {
               <p className={`profile__validate ${(emailDirty && emailError) && `profile__validate_state_active`}`}>{emailError}</p>
             </div>
           </form>
+          <p className='profile__error'>{errorOfAuth}</p>
           {disabled === true ? (
             <button onClick={handleDisabled} className='profile__submit link-hover' type="button">Редактировать</button>
           ) : (

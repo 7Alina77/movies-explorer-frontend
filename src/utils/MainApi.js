@@ -86,7 +86,6 @@ class MainApi {
   }
 
   saveMovie(body) {
-    console.log(body)
     return fetch(`${this._url}/movies`, {
       method: 'POST',
       headers: this._checkHeaders(),

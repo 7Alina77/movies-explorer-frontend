@@ -13,19 +13,20 @@ function Movies({ shortMovies, onCardLike, onCardClick, allFilms, onSearch, isCh
   const [filmsForRender, setFilmsForRender] = useState([]);
   const [shortFilms, setShortFilms] = useState([]);
   const [searchOnMovies, setSearchOnMovies] = useState('');
+  console.log(shortMovies)
 
   useEffect(() => {
     if(allFilms !== 0) {
       if(path === '/movies') {
         if(isCheckedOnMovies === false){
-          const searchedMovies = handleSearchMovies(allFilms, searchOnMovies);
-          setFilmsForRender(searchedMovies);
-        } else if(isCheckedOnMovies=== true) {
+          setFilmsForRender(allFilms);
+        } else {
           setShortFilms(shortMovies);
+          JSON.stringify(localStorage.setItem('shortMoviesOnMovies', shortFilms))
         }
       }
     }
-  },[allFilms, path, searchOnMovies, isCheckedOnMovies, shortFilms, shortMovies])
+  },[allFilms, path, searchOnMovies, isCheckedOnMovies, shortFilms, shortMovies, filmsForRender]);
 
   const handleOnSearch = useCallback(async (search) => {
       const moviesSearch = await onSearch(search);

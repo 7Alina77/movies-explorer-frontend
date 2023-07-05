@@ -12,14 +12,21 @@ function SearchForm({ handleOnSearch, isCheckedOnMovies, isCheckedOnSavedMovies,
   const [searchDirty, setSearchDirty] = useState(false);
   const [formValue, setFormValue] = useState({search: ''});
   const [formValid, setFormValid] = useState(false);
-  const [searchOnMovies, setSearchOnMovies] = useState('')
 
   useEffect(() => {
     if(path === '/movies') {
-      const searchOnMovies = localStorage.getItem('moviesSearchOnMovies')
-      setSearchOnMovies(searchOnMovies);
+      const searchOnMovies = JSON.parse(localStorage.getItem('moviesSearchOnMovies'))
+      if(searchOnMovies) {
+        setFormValue({search: searchOnMovies})
+      }
     }
-  },[setSearchOnMovies, path]);
+    if(path ==='/saved-movies') {
+      const searchOnSavedMovies = JSON.parse(localStorage.getItem('moviesSearchOnSavedMovies'));
+      if(searchOnSavedMovies) {
+        setFormValue({search: searchOnSavedMovies});
+      }
+    }
+  },[path]);
 
   useEffect((e) => {
     if(searchError || !searchDirty) {
@@ -64,8 +71,8 @@ function SearchForm({ handleOnSearch, isCheckedOnMovies, isCheckedOnSavedMovies,
     <section className='search-form'>
       <form onSubmit={handleOnSearchSubmit} className='search-form__form' id='search' noValidate>
         <input required className='search-form__input' form='search' placeholder='Фильм'
-        value={formValue.search}
-        minLength={3}
+        value={formValue.search ?? ''}
+        minLength={2}
         onBlur={e => blurHandler(e)}
         name="search"
         onChange={handleChangeSearch} 

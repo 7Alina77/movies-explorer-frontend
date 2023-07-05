@@ -12,7 +12,7 @@ function MoviesCard({ onCardLike, onCardClick, card, onCardDelete }) {
   const path = location.pathname;
   const [savedCard, setIsSavedCard ] = useState(false);
   const searchedMovies =  JSON.parse(localStorage.getItem('filteredMoviesOnMovies'));
-
+  
   useEffect(() => {
     if(searchedMovies === 0) {
       const savedMovie = searchedMovies.filter((movie) => movie.id === card.id)
@@ -20,7 +20,7 @@ function MoviesCard({ onCardLike, onCardClick, card, onCardDelete }) {
         setIsSavedCard(true)
       }
     }
-  },[card.id, searchedMovies])
+  },[card.id, searchedMovies]);
 
   function handleClickSaveCard() {
     onCardLike(card);
@@ -31,6 +31,7 @@ function MoviesCard({ onCardLike, onCardClick, card, onCardDelete }) {
   }
 
   function handleOnCardClick() {
+    setIsSavedCard(true);
     onCardClick(card);
   }
 
@@ -42,7 +43,7 @@ function MoviesCard({ onCardLike, onCardClick, card, onCardDelete }) {
           <p className='movies-card__subtitle'>{convertTime(card.duration)}</p>
         </div>
         {path === '/movies' && (
-          <button onClick={handleClickSaveCard} className={`movies-card__btn ${savedCard && `movies-card__btn_state_active`}`} type='button'>
+          <button onClick={handleClickSaveCard} className={`movies-card__btn ${(savedCard) && `movies-card__btn_state_active`}`} type='button'>
             <img className='movies-card__saved link-hover' src={savedCard ? saved : save} alt='значок сохраненного фильма'/>
           </button>
         )}
@@ -52,7 +53,7 @@ function MoviesCard({ onCardLike, onCardClick, card, onCardDelete }) {
           </button>
         )}
       </div>
-      <img onClick={handleOnCardClick} className='movies-card__img' src={`${MOVIES_URL}${card.image.url}`} alt='обложка фильма' />
+      <img onClick={handleOnCardClick} className='movies-card__img' src={path === '/movies' ? `${MOVIES_URL}${card.image.url}` : `${card.image}`} alt='обложка фильма' />
     </section>
   )
 }

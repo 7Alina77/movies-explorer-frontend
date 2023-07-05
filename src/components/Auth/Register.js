@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import MainLogo from '../MainLogo/MainLogo';
 
-function Register({onSubmit}) {
+function Register({errorOfAuth, onSubmit}) {
   const [nameError, setNameError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passError, setPassError] = useState(''); 
@@ -125,6 +125,7 @@ function Register({onSubmit}) {
             ></input>
             <p className={`authorization__validate ${(passDirty && passError) && `authorization__validate_state_active`}`}>{passError}</p>
           </div>
+          <p className='authorization__error'>{errorOfAuth}</p>
           <button form='authorization__form' disabled={!formValid} className={`authorization__submit link-hover ${!formValid && `authorization__submit_type_active`}`} type="submit">Зарегистрироваться</button>
         </form>
         <div className="authorization__login">

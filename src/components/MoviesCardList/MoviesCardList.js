@@ -34,19 +34,23 @@ function MoviesCardList({  isCheckedOnMovies, isCheckedOnSavedMovies, shortFilms
 
   //Отрисовка на страницу относительно пути
   useEffect(() => {
-    if(path === '/movies' && isCheckedOnMovies === false) {
-      setFilmsForRender(allSearchedFilms);
-      if(allSearchedFilms.length === 0) {
-        const films = JSON.parse(localStorage.getItem('filteredMoviesOnMovies'));
-        if(films) {
-          setFilmsForRender(films);
+    if(path === '/movies') {
+      if(isCheckedOnMovies === false) {
+        setFilmsForRender(allSearchedFilms);
+        if(allSearchedFilms === 0) {
+          const films = JSON.parse(localStorage.getItem('filteredMoviesOnMovies'));
+          if(films) {
+            setFilmsForRender(films);
+          }
         }
       }
-    } else if(path === '/movies' && isCheckedOnMovies === true) {
-      if(shortFilms.length > 0){
-        setFilmsForRender(shortFilms);
-      } else {
-        setNoFilms(true);
+    } else if(path === '/movies') {
+      if(isCheckedOnMovies === true) {
+        if(shortFilms.length > 0){
+          setFilmsForRender(shortFilms);
+        } else {
+          setNoFilms(true);
+        }
       }
     }
   },[path, isCheckedOnMovies,shortFilms, allSearchedFilms]);
@@ -68,12 +72,12 @@ function MoviesCardList({  isCheckedOnMovies, isCheckedOnSavedMovies, shortFilms
 
   return (
     <section className='movies-list'>
-      {(filmsForRender.length === 0 || noFilms === true)? (
+      {(!filmsForRender || noFilms === true) ? (
         <p className='movies-list__empty'>Упс! Фильмы не найдены</p>
       ) : (
         <>
           <div className='movies-list__items'>
-            {filmsForRender.length ? (
+            {filmsForRender && (
               filmsForRender.slice(0, filmsOnDisplay).map((card) => { 
                 return (
                 <MoviesCard 
@@ -96,11 +100,9 @@ function MoviesCardList({  isCheckedOnMovies, isCheckedOnSavedMovies, shortFilms
                   nameEN = {card.nameEN} 
                 />)
               })
-            ) : (
-              <Preloader />
             )}
           </div>
-          {(path === '/movies' && (filmsForRender.length > 3 && filmsForRender.length < allSearchedFilms)) && <button onClick={()=> setFilmsOnDisplay(filmsOnDisplay + step)} className='movies-list__btn link-hover' type='button'>Еще</button>}
+          {(path === '/movies' && (filmsForRender > 3 && filmsForRender < allSearchedFilms)) && <button onClick={()=> setFilmsOnDisplay(filmsOnDisplay + step)} className='movies-list__btn link-hover' type='button'>Еще</button>}
         </>
       )
       }

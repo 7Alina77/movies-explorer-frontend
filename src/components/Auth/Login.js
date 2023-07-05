@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import './Auth.css';
 import MainLogo from "../MainLogo/MainLogo";
 
-function Login({onSubmit}) {
+function Login({errorOfAuth, onSubmit}) {
   const [emailError, setEmailError] = useState('');
   const [passError, setPassError] = useState(''); 
   const [emailDirty, setEmailDirty] = useState(false);
@@ -73,7 +73,7 @@ function Login({onSubmit}) {
       <MainLogo />
       <h2 className="authorization__title">Рады видеть!</h2>
         <form onSubmit={handleSubmitLogin} className='authorization__form' /**noValidate**/>
-          <div className="authorization__container">
+          <div className="authorization__container authorization__container-login">
             <label className='authorization__label'>Email</label>
             <input required className='authorization__input'
               value={formValue.email}
@@ -95,6 +95,7 @@ function Login({onSubmit}) {
             ></input>
             <p className={`authorization__validate ${(passDirty && passError) && `authorization__validate_state_active`}`}>{passError}</p>
           </div>
+          <p className='authorization__error'>{errorOfAuth}</p>
           <button disabled={!formValid} className={`authorization__submit link-hover ${!formValid && `authorization__submit_type_active`}`} type="submit">Войти</button>
         </form>
         <div className="authorization__login">

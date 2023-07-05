@@ -4,12 +4,21 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import { useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 
 function SavedMovies({onCardClick, onCardDelete, allFilms, onSearch, isCheckedOnSavedMovies, onSwitchClick, onBurgerClick}) {
-
-  function handleOnSearch( search) {
+  const location = useLocation();
+  const path = location.pathname;
+  /**function handleOnSearch( search) {
     onSearch(search);
-  };
+  };*/
+
+  const handleOnSearch = useCallback(async (search) => {
+    const moviesSearch = await onSearch(search);
+    if(path ==='/saved-movies') {
+      localStorage.setItem('moviesSearchOnSavedMovies',JSON.stringify(search));
+    }
+},[onSearch, path]);
 
   return (
     <section className='saved-movies'>
