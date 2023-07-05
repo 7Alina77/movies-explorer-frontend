@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { NAME_REG_EXP } from '../../utils/constants';
 
-function Profile({errorOfAuth, onClick, onUpdateUser, onBurgerClick}) {
+function Profile({loggedIn, errorOfAuth, onClick, onUpdateUser, onBurgerClick}) {
   const currentUser = React.useContext(CurrentUserContext);
   const [name,setName] = useState('');
   const [email, setEmail] = useState('');

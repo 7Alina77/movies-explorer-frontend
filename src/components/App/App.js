@@ -12,17 +12,16 @@ import NotFound from '../NotFound/NotFound';
 import BurgerMenu from '../BurgerMenu/BurgerMenu';
 import Register from '../Auth/Register';
 import Login from '../Auth/Login';
+import Profile from '../Profile/Profile';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import {CurrentUserContext} from '../../contexts/CurrentUserContext';
 import { FilmsForRenderOnMoviesContext } from '../../contexts/FilmsForRenderOnMoviesContext';
-import Profile from '../Profile/Profile';
 import { NewMainApi } from '../../utils/MainApi';
 import {NewMoviesApi} from '../../utils/MoviesApi';
 import { handleSearchMovies } from '../../utils/common';
-import { handleFilterByTime } from '../../utils/common';
 import {handleFilterMoviesByTime} from '../../utils/common';
 import { MOVIES_URL } from '../../utils/constants';
-import { handleLikeCard } from '../../utils/common';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -35,7 +34,7 @@ function App() {
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [shortMovies, setShortMovies] = useState([]);
   const [savedMovies, setSavedMovies ] = useState([]);
-  const [isLoaderActive, setIsLoaderActive] = useState(false);
+  const [isLoaderActive, setIsLoaderActive] = useState(true);
   const [errorOfAuth, setErrorOfAuth] = useState('');
   const [isInfoTooltipOpen ,setIsInfoTooltipOpen] = useState(false);
   const [isSuccessInfoTooltipStatus, setIsSuccessInfoTooltipStatus] = useState({
@@ -286,7 +285,9 @@ function App() {
           <Routes>
             <Route path='/' element={<Landing isLoggedIn={loggedIn} onBurgerClick={handleBurger}/>}/>
             <Route path='/movies' element={
-              <Movies
+              <ProtectedRoute 
+                element={Movies}
+                loggedIn={loggedIn}
                 allSavedFilms = {savedMovies}
                 onCardLike={handleLikeMovie} 
                 onCardClick={handleCardClick} 
@@ -297,25 +298,32 @@ function App() {
                 isCheckedOnMovies={isCheckedOnMovies} 
                 onSwitchClick={handleChecked} 
                 onBurgerClick={handleBurger} 
-                shortMovies={shortMovies}/>}
-              />
+                shortMovies={shortMovies}
+              />}
+            />
             <Route path='/saved-movies' element={
-              <SavedMovies
+              <ProtectedRoute 
+                element={SavedMovies}
+                loggedIn={loggedIn}
                 onCardDelete={handleCardDelete} 
                 onCardClick={handleCardClick} 
                 allFilms={savedMovies} 
                 onSearch={handleGetAllMovies} 
                 isCheckedOnSavedMovies={isCheckedOnSavedMovies} 
                 onSwitchClick={handleChecked} 
-                onBurgerClick={handleBurger} />}
-              />
+                onBurgerClick={handleBurger} 
+              />}
+            />
             <Route path='/profile' element={
-              <Profile 
+              <ProtectedRoute 
+                element={Profile}
+                loggedIn={loggedIn}
                 errorOfAuth={errorOfAuth} 
                 onClick={handleSignOut} 
                 onUpdateUser={handleUpdateUserData} 
-                onBurgerClick={handleBurger} />}
-              />
+                onBurgerClick={handleBurger} 
+              />}
+            />
             <Route path='/signin' element={<Login onSubmit={handleAuth}/>}/>
             <Route path='/signup' element={<Register errorOfAuth={errorOfAuth} onSubmit={handleRegister}/>}/>
             <Route path='*' element={<NotFound />}/>

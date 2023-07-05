@@ -5,7 +5,7 @@ import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import { useCallback } from 'react';
 
-function SavedMovies({onCardClick, onCardDelete, allFilms, onSearch, isCheckedOnSavedMovies, onSwitchClick, onBurgerClick}) {
+function SavedMovies({loggedIn, onCardClick, onCardDelete, allFilms, onSearch, isCheckedOnSavedMovies, onSwitchClick, onBurgerClick}) {
 
   const handleOnSearch = useCallback(async (search) => {
     const moviesSearch = await onSearch(search);

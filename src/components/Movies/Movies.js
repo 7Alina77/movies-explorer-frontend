@@ -6,7 +6,7 @@ import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import { useCallback, useState } from 'react';
 
-function Movies({ onCardLike, onCardClick, onCardDelete, allFilms, filteredMovies, shortMovies, onSearch, isCheckedOnMovies, onSwitchClick, onBurgerClick, allSavedFilms}) {
+function Movies({loggedIn, onCardLike, onCardClick, onCardDelete, allFilms, filteredMovies, shortMovies, onSearch, isCheckedOnMovies, onSwitchClick, onBurgerClick, allSavedFilms}) {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleOnSearch = useCallback(async (search) => {
