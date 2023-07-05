@@ -1,15 +1,15 @@
 import './MoviesCardList.css';
+import React from 'react';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import { useLocation } from 'react-router-dom';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import Preloader from '../Preloader/Preloader';
-import { handleFilterMoviesByTime } from '../../utils/common';
+import { handleFilterMoviesByTime, handleSearchMovies } from '../../utils/common';
 
-function MoviesCardList({  isCheckedOnMovies, isCheckedOnSavedMovies, shortFilms, onCardLike, onCardClick, onCardDelete, allSearchedFilms, allSavedFilms}) {
+function MoviesCardList({isLoading,  isCheckedOnMovies, isCheckedOnSavedMovies, allSearchedFilms, filteredMovies, shortFilms, onCardLike, onCardClick, onCardDelete, allSavedFilms}) {
   const location = useLocation();
   const path = location.pathname;
   const [filmsForRender, setFilmsForRender] = useState([]);
-  const [noFilms, setNoFilms] = useState(false);
   const [step, setStep ] = useState(3);
   const [filmsOnDisplay, setFilmsOnDisplay] = useState(12);
 
@@ -32,47 +32,67 @@ function MoviesCardList({  isCheckedOnMovies, isCheckedOnSavedMovies, shortFilms
     resizeScreen();
   });
 
-  //Отрисовка на страницу относительно пути
+  function checkIsLiked(savedFilms, film) {
+    return savedFilms.some((card) => film.id === card.movieId)
+  }
+
+  //Отрисовка на страницу относительно пути и после перезагрузки страницы
   useEffect(() => {
     if(path === '/movies') {
-      if(isCheckedOnMovies === false) {
-        setFilmsForRender(allSearchedFilms);
-        if(allSearchedFilms === 0) {
-          const films = JSON.parse(localStorage.getItem('filteredMoviesOnMovies'));
-          if(films) {
-            setFilmsForRender(films);
-          }
-        }
-      }
-    } else if(path === '/movies') {
+      const searchOnMovies = localStorage.getItem('moviesSearchOnMovies');
       if(isCheckedOnMovies === true) {
-        if(shortFilms.length > 0){
-          setFilmsForRender(shortFilms);
-        } else {
-          setNoFilms(true);
-        }
+        const filmsForRenderList = handleSearchMovies(shortFilms, searchOnMovies)
+        setFilmsForRender(filmsForRenderList);
+      } else if(isCheckedOnMovies === false) {
+        setFilmsForRender(filteredMovies);
       }
     }
-  },[path, isCheckedOnMovies,shortFilms, allSearchedFilms]);
+  },[path, filteredMovies, shortFilms, isCheckedOnMovies]);
 
   useEffect(() => {
-    if(path === '/saved-movies' && !isCheckedOnSavedMovies){
-      setFilmsForRender(allSavedFilms);
-    } else if (path === '/saved-movies' && isCheckedOnSavedMovies) {
-      const savedFilmsForRender = handleFilterMoviesByTime(allSavedFilms);
-      console.log(savedFilmsForRender)
+    if(path === '/movies') {
+      if((!filteredMovies || filteredMovies.length === 0) && isCheckedOnMovies === true){
+        const filteredFilmsList = JSON.parse(localStorage.getItem('filteredMoviesOnMovies'));
+        const shortFilmsList = handleFilterMoviesByTime(filteredFilmsList);
+        setFilmsForRender(shortFilmsList);
+      }else if((!filteredMovies || filteredMovies.length === 0) && isCheckedOnMovies === false) {
+        const filteredFilmsList = JSON.parse(localStorage.getItem('filteredMoviesOnMovies'));
+        const searchOnMovies = localStorage.getItem('moviesSearchOnMovies');
+        if(searchOnMovies) {
+          const newFilteredFilms = handleSearchMovies(filteredFilmsList, searchOnMovies);
+          setFilmsForRender(newFilteredFilms);
+        }
+      }
     }
-  },[ path, allSavedFilms, isCheckedOnSavedMovies])
+  },[filteredMovies, path, isCheckedOnMovies]);
 
+  useEffect(() => {
+    if(path === '/saved-movies') {
+      const searchOnSavedMovies = localStorage.getItem('moviesSearchOnSavedMovies');
+      if(isCheckedOnSavedMovies === true) {
+        const shortSavedFilms = handleFilterMoviesByTime(allSavedFilms);
+        setFilmsForRender(shortSavedFilms);
+      } else if(isCheckedOnSavedMovies ===false) {
+        const searchOnSavedMovies = localStorage.getItem('moviesSearchOnSavedMovies');
+        if(searchOnSavedMovies) {
+          setFilmsForRender(handleSearchMovies(allSavedFilms, searchOnSavedMovies));
+        } else {
+          setFilmsForRender(allSavedFilms);
+        }
+      }
+    }
+  },[path, allSavedFilms, isCheckedOnSavedMovies]);
+
+  //Удаление карточки
   async function handleOnCardDelete(cardToDelete) {
     onCardDelete(cardToDelete)
     const newFilmsForRender = await filmsForRender.filter((film) => JSON.stringify(film) !== JSON.stringify(cardToDelete));
-    console.log(newFilmsForRender);
   }
 
   return (
     <section className='movies-list'>
-      {(!filmsForRender || noFilms === true) ? (
+      {isLoading && <Preloader/>}
+      {(!filmsForRender || filmsForRender.length === 0) ? (
         <p className='movies-list__empty'>Упс! Фильмы не найдены</p>
       ) : (
         <>
@@ -81,6 +101,7 @@ function MoviesCardList({  isCheckedOnMovies, isCheckedOnSavedMovies, shortFilms
               filmsForRender.slice(0, filmsOnDisplay).map((card) => { 
                 return (
                 <MoviesCard 
+                  isLiked = {checkIsLiked(allSavedFilms, card)}
                   onCardLike={onCardLike}
                   onCardClick={onCardClick}
                   onCardDelete={handleOnCardDelete}
@@ -102,7 +123,7 @@ function MoviesCardList({  isCheckedOnMovies, isCheckedOnSavedMovies, shortFilms
               })
             )}
           </div>
-          {(path === '/movies' && (filmsForRender > 3 && filmsForRender < allSearchedFilms)) && <button onClick={()=> setFilmsOnDisplay(filmsOnDisplay + step)} className='movies-list__btn link-hover' type='button'>Еще</button>}
+          {(path === '/movies' && ((filmsForRender >3 || filmsForRender.length > 3) && (filmsForRender < allSearchedFilms || filmsForRender.length < allSavedFilms.length))) && <button onClick={()=> setFilmsOnDisplay(filmsOnDisplay + step)} className='movies-list__btn link-hover' type='button'>Еще</button>}
         </>
       )
       }

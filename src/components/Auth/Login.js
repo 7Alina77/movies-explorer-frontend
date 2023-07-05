@@ -14,6 +14,10 @@ function Login({errorOfAuth, onSubmit}) {
     password: ''
   });
 
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
+
   const handleSubmitLogin = (e) => {
     e.preventDefault();
     if(!formValue.email || !formValue.pass) {
@@ -42,7 +46,9 @@ function Login({errorOfAuth, onSubmit}) {
       [name]: value
     });
 
-    if(e.target.name === 'email' && !e.target.validity.valid) {
+    if(e.target.name === 'email' && !isValidEmail(e.target.value)) {
+      setEmailError('Необходимо соответствие шаблону: data@domain.zone');
+    } else if(e.target.name === 'email' && !e.target.validity.valid) {
       setEmailError('Что-то пошло не так...');
       if(!e.target.value) {
         setEmailError('Необходимо заполнить поле')
@@ -75,7 +81,8 @@ function Login({errorOfAuth, onSubmit}) {
         <form onSubmit={handleSubmitLogin} className='authorization__form' /**noValidate**/>
           <div className="authorization__container authorization__container-login">
             <label className='authorization__label'>Email</label>
-            <input required className='authorization__input'
+            <input className='authorization__input'
+              required
               value={formValue.email}
               onBlur={e => blurHandler(e)}
               name="email"
@@ -84,7 +91,8 @@ function Login({errorOfAuth, onSubmit}) {
             ></input>
             <p className={`authorization__validate ${(emailDirty && emailError) && `authorization__validate_state_active`}`}>{emailError}</p>
             <label className='authorization__label'>Пароль</label>
-            <input required className='authorization__input'
+            <input className='authorization__input'
+              required
               value={formValue.pass}
               maxLength={15}
               minLength={3}

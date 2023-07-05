@@ -3,6 +3,7 @@ import React from 'react';
 import Header from '../Header/Header';
 import { useState, useEffect } from 'react';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import { NAME_REG_EXP } from '../../utils/constants';
 
 function Profile({errorOfAuth, onClick, onUpdateUser, onBurgerClick}) {
   const currentUser = React.useContext(CurrentUserContext);
@@ -42,9 +43,15 @@ function Profile({errorOfAuth, onClick, onUpdateUser, onBurgerClick}) {
     }
   }
 
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
+
   function handleChangeName(e) {
     setName(e.target.value);
-    if(e.target.name === 'name' && e.target.validationMessage) {
+    if(e.target.name === 'name' && e.target.validity.patternMismatch) {
+      setNameError('Поле может содержать только латиницу, кириллицу, пробел или дефис')
+    } else if(e.target.name === 'name' && e.target.validationMessage) {
       setNameError(e.target.validationMessage);
       if(!e.target.value) {
         setNameError('Заполните поле')
@@ -57,7 +64,9 @@ function Profile({errorOfAuth, onClick, onUpdateUser, onBurgerClick}) {
 
   function handleChangeEmail(e) {
     setEmail(e.target.value);
-    if(e.target.name === 'email' && !e.target.validity.valid) {
+    if(e.target.name === 'email' && !isValidEmail(e.target.value)) {
+      setEmailError('Необходимо соответствие шаблону: data@domain.zone');
+    } else if(e.target.name === 'email' && !e.target.validity.valid) {
       setEmailError(e.target.validationMessage);
       if(!e.target.value) {
         setEmailError('Заполните поле')
@@ -87,8 +96,10 @@ function Profile({errorOfAuth, onClick, onUpdateUser, onBurgerClick}) {
             <div className="profile__container">
               <div className='profile__items'>
                 <label className='profile__label'>Имя</label>
-                <input required className='profile__input'
+                <input className='profile__input'
+                  required
                   disabled={disabled}
+                  pattern={NAME_REG_EXP}
                   maxLength={30}
                   minLength={3}
                   value={name}
@@ -101,7 +112,8 @@ function Profile({errorOfAuth, onClick, onUpdateUser, onBurgerClick}) {
               <p className={`profile__validate ${(nameDirty && nameError) && `profile__validate_state_active`}`}>{nameError}</p>
               <div className='profile__items'>
                 <label className='profile__label'>Email</label>
-                <input required className='profile__input'
+                <input className='profile__input'
+                  required
                   disabled={disabled}
                   value={email}
                   onBlur={e => blurHandler(e)}

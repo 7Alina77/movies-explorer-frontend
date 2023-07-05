@@ -3,24 +3,12 @@ import save from '../../images/save.svg';
 import saved from '../../images/saved.svg';
 import deleteCard from '../../images/delete.svg';
 import { useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import { convertTime } from '../../utils/common';
 import { MOVIES_URL } from '../../utils/constants';
 
-function MoviesCard({ onCardLike, onCardClick, card, onCardDelete }) {
+function MoviesCard({ isLiked, onCardLike, onCardClick, card, onCardDelete }) {
   const location = useLocation();
   const path = location.pathname;
-  const [savedCard, setIsSavedCard ] = useState(false);
-  const searchedMovies =  JSON.parse(localStorage.getItem('filteredMoviesOnMovies'));
-  
-  useEffect(() => {
-    if(searchedMovies === 0) {
-      const savedMovie = searchedMovies.filter((movie) => movie.id === card.id)
-      if(savedMovie) {
-        setIsSavedCard(true)
-      }
-    }
-  },[card.id, searchedMovies]);
 
   function handleClickSaveCard() {
     onCardLike(card);
@@ -31,7 +19,6 @@ function MoviesCard({ onCardLike, onCardClick, card, onCardDelete }) {
   }
 
   function handleOnCardClick() {
-    setIsSavedCard(true);
     onCardClick(card);
   }
 
@@ -43,8 +30,8 @@ function MoviesCard({ onCardLike, onCardClick, card, onCardDelete }) {
           <p className='movies-card__subtitle'>{convertTime(card.duration)}</p>
         </div>
         {path === '/movies' && (
-          <button onClick={handleClickSaveCard} className={`movies-card__btn ${(savedCard) && `movies-card__btn_state_active`}`} type='button'>
-            <img className='movies-card__saved link-hover' src={savedCard ? saved : save} alt='значок сохраненного фильма'/>
+          <button onClick={handleClickSaveCard} className={`movies-card__btn ${isLiked && `movies-card__btn_state_active`}`} type='button'>
+            <img className='movies-card__saved link-hover' src={isLiked ? saved : save} alt='значок сохраненного фильма'/>
           </button>
         )}
         {path === '/saved-movies' && (

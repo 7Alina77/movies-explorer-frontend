@@ -17,8 +17,6 @@ export function handleSearchMovies(movies, search) {
     const commonNameRu = movie.nameRU.toLowerCase().trim();
     return ( commonNameEn.includes(toLowerCaseSearch) || commonNameRu.includes(toLowerCaseSearch))
   })
-  /**if(isSaved) {
-    localStorage.setItem('savedMoviesSearch', toLowerCaseSearch);*/
   return data;
 }
 

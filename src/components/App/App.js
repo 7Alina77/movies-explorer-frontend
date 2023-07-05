@@ -14,6 +14,7 @@ import Register from '../Auth/Register';
 import Login from '../Auth/Login';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import {CurrentUserContext} from '../../contexts/CurrentUserContext';
+import { FilmsForRenderOnMoviesContext } from '../../contexts/FilmsForRenderOnMoviesContext';
 import Profile from '../Profile/Profile';
 import { NewMainApi } from '../../utils/MainApi';
 import {NewMoviesApi} from '../../utils/MoviesApi';
@@ -25,6 +26,7 @@ import { handleLikeCard } from '../../utils/common';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
+  const [filmsForRender, setFilmsForRender] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isBurger, setIsBurger] = useState(false);
   const [isCheckedOnMovies, setIsCheckedOnMovies] = useState(false);
@@ -48,6 +50,7 @@ function App() {
 
   //Проверяем, авторизован ли пользователь
   const handleSetUserData = useCallback(async () => {
+    setIsLoaderActive(true);
     try {
       const user = await NewMainApi.getUserInfo();
       if(user) {
@@ -67,28 +70,38 @@ function App() {
  
   //Сохраняем все фильмы при поиске
   const handleGetAllMovies = useCallback(async (search) => {
-    try {
-      const movies = await NewMoviesApi.getMovies();
-      setInitialMovies(movies);
-      if(movies) {
-        const filteredMoviesList = await handleSearchMovies(movies, search);
-        localStorage.setItem('filteredMoviesOnMovies',JSON.stringify(filteredMoviesList))
-        setFilteredMovies(filteredMoviesList);
-        return movies;
+    if(path ==='/movies') {
+      try {
+        const movies = await NewMoviesApi.getMovies();
+        setInitialMovies(movies);
+        const shortMoviesList = handleFilterMoviesByTime(movies);
+        setShortMovies(shortMoviesList);
+        if(movies) {
+          const filteredMoviesList = await handleSearchMovies(movies, search);
+          localStorage.setItem('filteredMoviesOnMovies',JSON.stringify(filteredMoviesList))
+          setFilmsForRender(filteredMoviesList);
+          setFilteredMovies(filteredMoviesList);
+          return movies;
+        }
+      } catch(err) {
+        setIsSuccessInfoTooltipStatus({isSuccess: false, text:'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'});
+        setIsInfoTooltipOpen(true);
+        console.log(`Ошибка получения фильмов: ${err}`)
       }
-    } catch(err) {
-      setIsSuccessInfoTooltipStatus({isSuccess: false, text:'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'});
-      setIsInfoTooltipOpen(true);
-      console.log(`Ошибка получения фильмов: ${err}`)
+    } else if(path === '/saved-movies') {
+      localStorage.setItem('moviesSearchOnSavedMovies', search);
+      setSavedMovies(handleSearchMovies(savedMovies, search));
     }
-  }, []);
+  }, [path,savedMovies]);
 
+  //Получаем короткометражки
   useEffect(() => {
-    if(filteredMovies) {
-      const shortMoviesList = handleFilterMoviesByTime(filteredMovies);
-      setShortMovies(shortMoviesList);
+    if((!filteredMovies || filteredMovies.length < 1) && (!initialMovies || initialMovies.length <1)) {
+      const allShortMoviesList = handleFilterMoviesByTime(initialMovies);
+      setShortMovies(allShortMoviesList);
+      localStorage.setItem('shortMoviesOnMovies', allShortMoviesList);
     }
-  },[filteredMovies]);
+  },[filteredMovies, initialMovies]);
   
   //Получаем те фильмы, которые юзер сохранил
   const handleGetSavedMovies = useCallback(async () => {
@@ -114,22 +127,11 @@ function App() {
     if(path === '/movies') {
       setIsCheckedOnMovies(!isCheckedOnMovies); 
       localStorage.setItem('isCheckedShortMoviesOnMovies', !isCheckedOnMovies);
-      if(isCheckedOnMovies) {
-        const shortMovie = handleFilterMoviesByTime(filteredMovies);
-        console.log(shortMovie)
-        setShortMovies(shortMovie);
-      }
+      setShortMovies(handleFilterMoviesByTime(filteredMovies))
     }
     if(path==='/saved-movies') {
       setIsCheckedOnSavedMovies(!isCheckedOnSavedMovies);
-      localStorage.setItem('isCheckedShortMoviesOnSavedMovies', !isCheckedOnSavedMovies)
-      if(isCheckedOnSavedMovies === true) {
-        const shortMovie = handleFilterMoviesByTime(savedMovies);
-        setShortMovies(shortMovie);
-        if(shortMovies.length === 0) {
-          setSavedMovies(shortMovies);
-        }
-      }
+      localStorage.setItem('isCheckedShortMoviesOnSavedMovies', !isCheckedOnSavedMovies);
     }
   };
 
@@ -138,7 +140,7 @@ function App() {
       const filteredMovies = JSON.parse(localStorage.getItem('filteredMoviesOnMovies'));
       setFilteredMovies(filteredMovies);
     }
-  },[path, isCheckedOnMovies])
+  },[path, isCheckedOnMovies]);
 
   //Регистрация пользователя
   async function handleRegister(name, email, pass) {
@@ -189,6 +191,7 @@ function App() {
 
   //Выход из профиля и обнуление стейтов
   async function handleSignOut() {
+    setIsLoaderActive(true);
     try {
       await NewMainApi.logOut();
       setLoggedIn(false);
@@ -197,6 +200,8 @@ function App() {
       navigate('/', {replace: true});
     } catch(err) {
       console.log(`Ошибка с выходом из аккаунта: ${err}`)
+    } finally {
+      setIsLoaderActive(false);
     }
   }
 
@@ -261,7 +266,7 @@ function App() {
 
   //Удаление фильма
   async function handleCardDelete(card) {
-    const movieToDelete = savedMovies.find((movie) => card._id === movie._id || card.movieId === movie.movieId );
+    const movieToDelete = savedMovies.find((movie) => card._id === movie._id || card.id === movie._id );
     try {
       const cardToDelete = await NewMainApi.deleteMovie(movieToDelete._id);
       if(cardToDelete) {
@@ -277,22 +282,52 @@ function App() {
     <div className='page'>
     {isLoaderActive ? (<Preloader />) : (
       <CurrentUserContext.Provider value={currentUser}>
-        <Routes>
-          <Route path='/' element={<Landing isLoggedIn={loggedIn} onBurgerClick={handleBurger}/>}/>
-          <Route path='/movies' element={<Movies onCardLike={handleLikeMovie} onCardClick={handleCardClick} allFilms={filteredMovies} onSearch={handleGetAllMovies} isCheckedOnMovies={isCheckedOnMovies} onSwitchClick={handleChecked} onBurgerClick={handleBurger} shortMovies={shortMovies}/>}/>
-          <Route path='/saved-movies' element={<SavedMovies onCardDelete={handleCardDelete} onCardClick={handleCardClick} allFilms={savedMovies} onSearch={handleGetAllMovies} isCheckedOnSavedMovies={isCheckedOnSavedMovies} onSwitchClick={handleChecked} onBurgerClick={handleBurger} />}/>
-          <Route path='/profile' element={<Profile errorOfAuth={errorOfAuth} onClick={handleSignOut} onUpdateUser={handleUpdateUserData} onBurgerClick={handleBurger} />}/>
-          <Route path='/signin' element={<Login onSubmit={handleAuth}/>}/>
-          <Route path='/signup' element={<Register errorOfAuth={errorOfAuth} onSubmit={handleRegister}/>}/>
-          <Route path='*' element={<NotFound />}/>
-        </Routes>
-        <BurgerMenu isBurger={isBurger} onClose={handleBurger}/>
-        <InfoTooltip 
-          name = 'register'
-          isOpen = {isInfoTooltipOpen}
-          onClose = {closeAllPopups}
-          isSuccessInfoTooltipStatus = {isSuccessInfoTooltipStatus}
-        />
+        <FilmsForRenderOnMoviesContext.Provider value={filmsForRender}>
+          <Routes>
+            <Route path='/' element={<Landing isLoggedIn={loggedIn} onBurgerClick={handleBurger}/>}/>
+            <Route path='/movies' element={
+              <Movies
+                allSavedFilms = {savedMovies}
+                onCardLike={handleLikeMovie} 
+                onCardClick={handleCardClick} 
+                onCardDelete={handleCardDelete}
+                allFilms={initialMovies} 
+                filteredMovies={filmsForRender} 
+                onSearch={handleGetAllMovies} 
+                isCheckedOnMovies={isCheckedOnMovies} 
+                onSwitchClick={handleChecked} 
+                onBurgerClick={handleBurger} 
+                shortMovies={shortMovies}/>}
+              />
+            <Route path='/saved-movies' element={
+              <SavedMovies
+                onCardDelete={handleCardDelete} 
+                onCardClick={handleCardClick} 
+                allFilms={savedMovies} 
+                onSearch={handleGetAllMovies} 
+                isCheckedOnSavedMovies={isCheckedOnSavedMovies} 
+                onSwitchClick={handleChecked} 
+                onBurgerClick={handleBurger} />}
+              />
+            <Route path='/profile' element={
+              <Profile 
+                errorOfAuth={errorOfAuth} 
+                onClick={handleSignOut} 
+                onUpdateUser={handleUpdateUserData} 
+                onBurgerClick={handleBurger} />}
+              />
+            <Route path='/signin' element={<Login onSubmit={handleAuth}/>}/>
+            <Route path='/signup' element={<Register errorOfAuth={errorOfAuth} onSubmit={handleRegister}/>}/>
+            <Route path='*' element={<NotFound />}/>
+          </Routes>
+          <BurgerMenu isBurger={isBurger} onClose={handleBurger}/>
+          <InfoTooltip 
+            name = 'register'
+            isOpen = {isInfoTooltipOpen}
+            onClose = {closeAllPopups}
+            isSuccessInfoTooltipStatus = {isSuccessInfoTooltipStatus}
+          />
+        </FilmsForRenderOnMoviesContext.Provider>
       </CurrentUserContext.Provider>
     )}
     </div>

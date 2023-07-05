@@ -2,6 +2,7 @@ import './Auth.css';
 import {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import MainLogo from '../MainLogo/MainLogo';
+import { NAME_REG_EXP } from '../../utils/constants';
 
 function Register({errorOfAuth, onSubmit}) {
   const [nameError, setNameError] = useState('');
@@ -31,6 +32,10 @@ function Register({errorOfAuth, onSubmit}) {
     })
   } 
 
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
+
   const blurHandler = (e) => {
     switch (e.target.name) {
       case 'name':
@@ -53,7 +58,9 @@ function Register({errorOfAuth, onSubmit}) {
       [name]: value
     });
 
-    if(e.target.name === 'name' && e.target.validationMessage) {
+    if(e.target.name === 'name' && e.target.validity.patternMismatch) {
+      setNameError('Поле может содержать только латиницу, кириллицу, пробел или дефис')
+    } else if(e.target.name === 'name' && e.target.validationMessage) {
       setNameError('Что-то пошло не так...');
       if(!e.target.value) {
         setNameError('Необходимо заполнить поле')
@@ -61,7 +68,9 @@ function Register({errorOfAuth, onSubmit}) {
     } else {
       setNameError('')
     }
-    if(e.target.name === 'email' && !e.target.validity.valid) {
+    if(e.target.name === 'email' && !isValidEmail(e.target.value)) {
+      setEmailError('Необходимо соответствие шаблону: data@domain.zone');
+    } else if(e.target.name === 'email' && !e.target.validity.valid) {
       setEmailError('Что-то пошло не так...');
       if(!e.target.value) {
         setEmailError('Необходимо заполнить поле')
@@ -94,9 +103,11 @@ function Register({errorOfAuth, onSubmit}) {
         <form onSubmit={handleSubmitRegister} id='authorization__form' className='authorization__form' noValidate>
           <div className="authorization__container">
             <label className='authorization__label'>Имя</label>
-            <input required className='authorization__input'
-              maxLength={10}
-              minLength={3}
+            <input className='authorization__input'
+              required
+              pattern={NAME_REG_EXP}
+              maxLength={30}
+              minLength={2}
               value={formValue.name}
               onBlur={e => blurHandler(e)}
               name="name"
@@ -105,7 +116,8 @@ function Register({errorOfAuth, onSubmit}) {
             ></input>
             <p className={`authorization__validate ${(nameDirty && nameError) && `authorization__validate_state_active`}`}>{nameError}</p>
             <label className='authorization__label'>Email</label>
-            <input required className='authorization__input'
+            <input className='authorization__input'
+              required
               value={formValue.email}
               onBlur={e => blurHandler(e)}
               name="email"
@@ -114,7 +126,8 @@ function Register({errorOfAuth, onSubmit}) {
             ></input>
             <p className={`authorization__validate ${(emailDirty && emailError) && `authorization__validate_state_active`}`}>{emailError}</p>
             <label className='authorization__label'>Пароль</label>
-            <input required className='authorization__input'
+            <input className='authorization__input'
+              required
               value={formValue.pass}
               maxLength={15}
               minLength={3}

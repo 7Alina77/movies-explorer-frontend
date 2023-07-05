@@ -15,13 +15,13 @@ function SearchForm({ handleOnSearch, isCheckedOnMovies, isCheckedOnSavedMovies,
 
   useEffect(() => {
     if(path === '/movies') {
-      const searchOnMovies = JSON.parse(localStorage.getItem('moviesSearchOnMovies'))
+      const searchOnMovies = localStorage.getItem('moviesSearchOnMovies');
       if(searchOnMovies) {
         setFormValue({search: searchOnMovies})
       }
     }
     if(path ==='/saved-movies') {
-      const searchOnSavedMovies = JSON.parse(localStorage.getItem('moviesSearchOnSavedMovies'));
+      const searchOnSavedMovies = localStorage.getItem('moviesSearchOnSavedMovies');
       if(searchOnSavedMovies) {
         setFormValue({search: searchOnSavedMovies});
       }
