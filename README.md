@@ -1,4 +1,6 @@
 # movies-explorer-frontend
+Ссылка на фронт:
+http://alina-movies-dipl.nomoredomains.rocks/
 
 Ссылка на гит-пулл:
 https://github.com/7Alina77/movies-explorer-frontend/pull/2

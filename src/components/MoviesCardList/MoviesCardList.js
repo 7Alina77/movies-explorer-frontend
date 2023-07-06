@@ -17,13 +17,17 @@ function MoviesCardList({isLoading,  isCheckedOnMovies, isCheckedOnSavedMovies, 
   function resizeScreen() {
     const width = window.innerWidth;
     setTimeout(() => {
-      if(width < 768) {
-        setFilmsOnDisplay(8);
-        setStep(2);
-      }
-      if(width < 480) {
-        setFilmsOnDisplay(5);
-        setStep(2);
+      if(path ==='/movies') {
+        if(width < 768) {
+          setFilmsOnDisplay(8);
+          setStep(2);
+        }
+        if(width < 480) {
+          setFilmsOnDisplay(5);
+          setStep(2);
+        }
+      } else {
+        setFilmsOnDisplay(filmsForRender.length);
       }
     }, 2000);
   }
@@ -123,7 +127,7 @@ function MoviesCardList({isLoading,  isCheckedOnMovies, isCheckedOnSavedMovies, 
               })
             )}
           </div>
-          {(path === '/movies' && ((filmsForRender >3 || filmsForRender.length > 3) && (filmsForRender < allSearchedFilms || filmsForRender.length < allSavedFilms.length))) && <button onClick={()=> setFilmsOnDisplay(filmsOnDisplay + step)} className='movies-list__btn link-hover' type='button'>Еще</button>}
+          {(path === '/movies' && ((filmsForRender >3 || filmsForRender.length > 3) && ( filmsForRender.length > filmsOnDisplay))) && <button onClick={()=> setFilmsOnDisplay(filmsOnDisplay + step)} className='movies-list__btn link-hover' type='button'>Еще</button>}
         </>
       )
       }

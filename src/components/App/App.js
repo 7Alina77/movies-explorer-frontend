@@ -265,7 +265,7 @@ function App() {
 
   //Удаление фильма
   async function handleCardDelete(card) {
-    const movieToDelete = savedMovies.find((movie) => card._id === movie._id || card.id === movie._id );
+    const movieToDelete = savedMovies.find((movie) => card.id === movie.movieId || card._id === movie._id );
     try {
       const cardToDelete = await NewMainApi.deleteMovie(movieToDelete._id);
       if(cardToDelete) {
