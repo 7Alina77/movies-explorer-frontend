@@ -1,5 +1,4 @@
 import {MY_API_URL} from './constants';
-import { MOVIES_URL } from './constants';
 
 class MainApi {
   constructor(url) {

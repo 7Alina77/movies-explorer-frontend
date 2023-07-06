@@ -30,7 +30,7 @@ function MoviesCard({ isLiked, onCardLike, onCardClick, card, onCardDelete }) {
           <p className='movies-card__subtitle'>{convertTime(card.duration)}</p>
         </div>
         {path === '/movies' && (
-          <button onClick={handleClickSaveCard} className={`movies-card__btn ${isLiked && `movies-card__btn_state_active`}`} type='button'>
+          <button onClick={isLiked ? handleClickDeleteCard :handleClickSaveCard} className={`movies-card__btn ${isLiked && `movies-card__btn_state_active`}`} type='button'>
             <img className='movies-card__saved link-hover' src={isLiked ? saved : save} alt='значок сохраненного фильма'/>
           </button>
         )}
