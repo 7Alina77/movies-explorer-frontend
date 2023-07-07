@@ -12,7 +12,7 @@ function Movies({loggedIn, onCardLike, onCardClick, onCardDelete, allFilms, filt
   const handleOnSearch = useCallback(async (search) => {
     setIsLoading(true)
     const moviesSearch = await onSearch(search);
-    (localStorage.setItem('moviesSearchOnMovies', search));
+    localStorage.setItem('moviesSearchOnMovies', search);
     setIsLoading(false);
   },[onSearch]);
 

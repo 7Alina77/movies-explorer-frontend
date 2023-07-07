@@ -12,6 +12,7 @@ function SearchForm({ handleOnSearch, isCheckedOnMovies, isCheckedOnSavedMovies,
   const [searchDirty, setSearchDirty] = useState(false);
   const [formValue, setFormValue] = useState({search: ''});
   const [formValid, setFormValid] = useState(false);
+  const [btnDisabled, setBtnDisabled] = useState(true);
 
   useEffect(() => {
     if(path === '/movies') {
@@ -28,13 +29,15 @@ function SearchForm({ handleOnSearch, isCheckedOnMovies, isCheckedOnSavedMovies,
     }
   },[path]);
 
-  useEffect((e) => {
-    if(searchError || !searchDirty) {
-      setFormValid(false);
-    } else {
-      setFormValid(true);
+  useEffect(() => {
+    if(path === '/movies') {
+      if(searchError || !searchDirty) {
+        setFormValid(false);
+      } else {
+        setFormValid(true);
+      }
     }
-  }, [searchError, searchDirty]);
+  }, [searchError, searchDirty, path]);
 
   const blurHandler = (e) => {
     switch (e.target.name) {
@@ -51,14 +54,19 @@ function SearchForm({ handleOnSearch, isCheckedOnMovies, isCheckedOnSavedMovies,
       ...formValue,
       [name]: value
     });
-
-    if(e.target.name === 'search' && !e.target.validity.valid) {
-      setSearchError('Нужно ввести ключевое слово');
-      if(!e.target.value) {
-        setSearchError('Необходимо заполнить поле')
+ 
+    if(path === '/movies') {
+      if(e.target.name === 'search' && e.target.value) {
+        setBtnDisabled(false);
+        if(!e.target.value) {
+          setSearchError('Необходимо заполнить поле')
+        }
+      } else {
+        setSearchError('');
       }
     } else {
       setSearchError('');
+      setBtnDisabled(false)
     }
   }
 
@@ -72,12 +80,11 @@ function SearchForm({ handleOnSearch, isCheckedOnMovies, isCheckedOnSavedMovies,
       <form onSubmit={handleOnSearchSubmit} className='search-form__form' id='search' noValidate>
         <input required className='search-form__input' form='search' placeholder='Фильм'
         value={formValue.search ?? ''}
-        minLength={2}
         onBlur={e => blurHandler(e)}
         name="search"
         onChange={handleChangeSearch} 
         ></input>
-        <button disabled={!formValid} className={`search-form__btn link-hover ${!formValid && `search-form__btn_state_active`}`} type='submit' form='search'>
+        <button className={`search-form__btn link-hover ${btnDisabled && `search-form__btn_state_active`}`} type='submit' form='search'>
           <img className='search-form__btn-img' src={search} alt='кнопка поиска' />
         </button>
       </form>

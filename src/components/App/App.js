@@ -66,6 +66,18 @@ function App() {
   useEffect(() => {
     handleSetUserData();
   },[handleSetUserData]);
+
+  //Получаем те фильмы, которые юзер сохранил
+  const handleGetSavedMovies = useCallback(async () => {
+    try {
+      const savedMovies = await NewMainApi.getSavedMovies();
+      if(savedMovies) {
+        setSavedMovies(savedMovies);
+      }
+    } catch(err) {
+      console.log(`Ошибка получения фильмов юзера: ${err}`)
+    } 
+  },[])
  
   //Сохраняем все фильмы при поиске
   const handleGetAllMovies = useCallback(async (search) => {
@@ -73,8 +85,10 @@ function App() {
       try {
         const movies = await NewMoviesApi.getMovies();
         setInitialMovies(movies);
+        localStorage.setItem('allMovies', JSON.stringify(movies));
         const shortMoviesList = handleFilterMoviesByTime(movies);
         setShortMovies(shortMoviesList);
+        localStorage.setItem('shortMoviesOnMovies', JSON.stringify(shortMoviesList));
         if(movies) {
           const filteredMoviesList = await handleSearchMovies(movies, search);
           localStorage.setItem('filteredMoviesOnMovies',JSON.stringify(filteredMoviesList))
@@ -89,35 +103,24 @@ function App() {
       }
     } else if(path === '/saved-movies') {
       localStorage.setItem('moviesSearchOnSavedMovies', search);
-      setSavedMovies(handleSearchMovies(savedMovies, search));
     }
-  }, [path,savedMovies]);
+  }, [path]);
 
   //Получаем короткометражки
   useEffect(() => {
     if((!filteredMovies || filteredMovies.length < 1) && (!initialMovies || initialMovies.length <1)) {
       const allShortMoviesList = handleFilterMoviesByTime(initialMovies);
       setShortMovies(allShortMoviesList);
-      localStorage.setItem('shortMoviesOnMovies', allShortMoviesList);
     }
   },[filteredMovies, initialMovies]);
-  
-  //Получаем те фильмы, которые юзер сохранил
-  const handleGetSavedMovies = useCallback(async () => {
-    try {
-      const savedMovies = await NewMainApi.getSavedMovies();
-      if(savedMovies) {
-        setSavedMovies(savedMovies);
-      }
-    } catch(err) {
-      console.log(`Ошибка получения фильмов юзера: ${err}`)
-    }
-  },[])
 
   //Если пользователь зарегистрирован - ищем фильмы, которые он сохранил
   useEffect(() => {
     if(loggedIn) {
+      setIsLoaderActive(true)
       handleGetSavedMovies();
+      localStorage.setItem('allSavedMovies', JSON.stringify(handleGetSavedMovies()));
+      setIsLoaderActive(false);
     }
   },[handleGetSavedMovies, loggedIn]);
 
@@ -125,7 +128,7 @@ function App() {
   const handleChecked = () => {
     if(path === '/movies') {
       setIsCheckedOnMovies(!isCheckedOnMovies); 
-      localStorage.setItem('isCheckedShortMoviesOnMovies', !isCheckedOnMovies);
+      localStorage.setItem('isCheckedShortMoviesOnMovies', JSON.stringify(!isCheckedOnMovies));
       setShortMovies(handleFilterMoviesByTime(filteredMovies))
     }
     if(path==='/saved-movies') {
@@ -133,13 +136,6 @@ function App() {
       localStorage.setItem('isCheckedShortMoviesOnSavedMovies', !isCheckedOnSavedMovies);
     }
   };
-
-  useEffect(() => {
-    if(path === '/movies' && isCheckedOnMovies === false) {
-      const filteredMovies = JSON.parse(localStorage.getItem('filteredMoviesOnMovies'));
-      setFilteredMovies(filteredMovies);
-    }
-  },[path, isCheckedOnMovies]);
 
   //Регистрация пользователя
   async function handleRegister(name, email, pass) {
@@ -308,7 +304,7 @@ function App() {
                 onCardDelete={handleCardDelete} 
                 onCardClick={handleCardClick} 
                 allFilms={savedMovies} 
-                onSearch={handleGetAllMovies} 
+                onSearch={handleGetSavedMovies} 
                 isCheckedOnSavedMovies={isCheckedOnSavedMovies} 
                 onSwitchClick={handleChecked} 
                 onBurgerClick={handleBurger} 

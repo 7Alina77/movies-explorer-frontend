@@ -1,5 +1,5 @@
 import './MoviesCardList.css';
-import React from 'react';
+import React, { useCallback } from 'react';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -12,6 +12,7 @@ function MoviesCardList({isLoading,  isCheckedOnMovies, isCheckedOnSavedMovies, 
   const [filmsForRender, setFilmsForRender] = useState([]);
   const [step, setStep ] = useState(3);
   const [filmsOnDisplay, setFilmsOnDisplay] = useState(12);
+  localStorage.setItem('allSavedMovies', JSON.stringify(allSavedFilms));
 
   //Вывод карточек относительно размера экрана
   function resizeScreen() {
@@ -43,10 +44,11 @@ function MoviesCardList({isLoading,  isCheckedOnMovies, isCheckedOnSavedMovies, 
   //Отрисовка на страницу относительно пути и после перезагрузки страницы
   useEffect(() => {
     if(path === '/movies') {
-      const searchOnMovies = localStorage.getItem('moviesSearchOnMovies');
-      if(isCheckedOnMovies === true) {
-        const filmsForRenderList = handleSearchMovies(shortFilms, searchOnMovies)
-        setFilmsForRender(filmsForRenderList);
+      if(isCheckedOnMovies === true && localStorage.getItem('moviesSearchOnMovies')) {
+        const searchOnMovies = localStorage.getItem('moviesSearchOnMovies');
+        setFilmsForRender(handleSearchMovies(shortFilms, searchOnMovies));
+      } else if(isCheckedOnMovies === true) {
+        setFilmsForRender(shortFilms);
       } else if(isCheckedOnMovies === false) {
         setFilmsForRender(filteredMovies);
       }
@@ -55,37 +57,65 @@ function MoviesCardList({isLoading,  isCheckedOnMovies, isCheckedOnSavedMovies, 
 
   useEffect(() => {
     if(path === '/movies') {
-      if((!filteredMovies || filteredMovies.length === 0) && isCheckedOnMovies === true){
-        const filteredFilmsList = JSON.parse(localStorage.getItem('filteredMoviesOnMovies'));
-        const shortFilmsList = handleFilterMoviesByTime(filteredFilmsList);
-        setFilmsForRender(shortFilmsList);
-      }else if((!filteredMovies || filteredMovies.length === 0) && isCheckedOnMovies === false) {
-        const filteredFilmsList = JSON.parse(localStorage.getItem('filteredMoviesOnMovies'));
-        const searchOnMovies = localStorage.getItem('moviesSearchOnMovies');
-        if(searchOnMovies) {
-          const newFilteredFilms = handleSearchMovies(filteredFilmsList, searchOnMovies);
-          setFilmsForRender(newFilteredFilms);
+      if(filteredMovies === null) {
+        const search = localStorage.getItem('moviesSearchOnMovies');
+        if(localStorage.getItem('isCheckedShortMoviesOnMovies')) {
+          const checkboxState = JSON.parse(localStorage.getItem('isCheckedShortMoviesOnMovies'));
+          if(checkboxState === false && search) {
+            const filteredFilmsList = JSON.parse(localStorage.getItem('filteredMoviesOnMovies'));
+            setFilmsForRender(filteredFilmsList);
+          } else if(checkboxState === false) {
+            setFilmsForRender(JSON.parse(localStorage.getItem('allMovies')))
+          } else if(checkboxState === true && search) {
+            const shortMovies = JSON.parse(localStorage.getItem('shortMoviesOnMovies'))
+            const shortFilteredFilms = handleSearchMovies(shortMovies, search);
+            setFilmsForRender(shortFilteredFilms);
+          } else if(checkboxState === true) {
+            setFilmsForRender(JSON.parse(localStorage.getItem('shortMoviesOnMovies')));
+          }
         }
       }
     }
-  },[filteredMovies, path, isCheckedOnMovies]);
+  }, [filteredMovies, path, isCheckedOnMovies, shortFilms]);
 
   useEffect(() => {
     if(path === '/saved-movies') {
+      const savedMovies = JSON.parse(localStorage.getItem('allSavedMovies'));
       const searchOnSavedMovies = localStorage.getItem('moviesSearchOnSavedMovies');
+      const isCheckedShortMoviesOnSavedMovies = JSON.parse(localStorage.getItem('isCheckedShortMoviesOnSavedMovies'));
       if(isCheckedOnSavedMovies === true) {
         const shortSavedFilms = handleFilterMoviesByTime(allSavedFilms);
         setFilmsForRender(shortSavedFilms);
-      } else if(isCheckedOnSavedMovies ===false) {
-        const searchOnSavedMovies = localStorage.getItem('moviesSearchOnSavedMovies');
+      } else {
         if(searchOnSavedMovies) {
-          setFilmsForRender(handleSearchMovies(allSavedFilms, searchOnSavedMovies));
+          const filteredSavedMovies = handleSearchMovies(allSavedFilms, searchOnSavedMovies);
+          setFilmsForRender(filteredSavedMovies);
         } else {
           setFilmsForRender(allSavedFilms);
+          console.log(searchOnSavedMovies);
         }
       }
     }
   },[path, allSavedFilms, isCheckedOnSavedMovies]);
+
+  useEffect(() => {
+    if(localStorage.getItem('allSavedMovies') && localStorage.getItem('isCheckedShortMoviesOnSavedMovies')) {
+      const savedMovies = JSON.parse(localStorage.getItem('allSavedMovies'));
+      const isCheckedShortMoviesOnSavedMovies = JSON.parse(localStorage.getItem('isCheckedShortMoviesOnSavedMovies'));
+      if(isCheckedShortMoviesOnSavedMovies === true) {
+        const shortSavedMovies = handleFilterMoviesByTime(allSavedFilms)
+        setFilmsForRender(shortSavedMovies);
+      }
+    } else if(localStorage.getItem('isCheckedShortMoviesOnSavedMovies') && localStorage.getItem('moviesSearchOnSavedMovies')) {
+      const isCheckedShortMoviesOnSavedMovies = JSON.parse(localStorage.getItem('isCheckedShortMoviesOnSavedMovies'));
+      const search = localStorage.getItem('moviesSearchOnSavedMovies');
+      console.log(search);
+      if(isCheckedShortMoviesOnSavedMovies === false) {
+        const search = localStorage.getItem('moviesSearchOnSavedMovies');
+        console.log(search);
+      }
+    }
+  },[allSavedFilms]);
 
   //Удаление карточки
   async function handleOnCardDelete(cardToDelete) {
