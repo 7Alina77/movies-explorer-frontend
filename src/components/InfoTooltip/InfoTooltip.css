@@ -54,11 +54,13 @@
   padding-bottom: 20px;
   max-width: 358px;
   max-height: 80px;
-  font-size: 24px;
+  font-size: 18px;
 }
 
 .popup__close {
   background-image: url(../../images/Close-Icon.svg);
+  background-repeat: no-repeat;
+  background-size: cover;
   background-color: rgba(0, 0, 0, 0);
   width: 32px;
   height: 32px;
@@ -78,10 +80,6 @@
     padding-top: 25px;
     padding-left: 22px;
     padding-right: 22px;
-  }
-
-  .popup__info-text {
-    font-size: 20px;
   }
 
   .popup__close {

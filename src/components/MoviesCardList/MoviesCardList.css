@@ -16,7 +16,7 @@
   max-width: 1280px;
   padding: 0 70px 30px;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-rows: repeat(1, 1fr);
   gap: 30px 24px;
   justify-content: center;
 }

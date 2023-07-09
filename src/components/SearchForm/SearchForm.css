@@ -74,6 +74,11 @@
   max-height: 34px;
 }
 
+.search-form__btn_state_active {
+  opacity: .5;
+  pointer-events: none;
+}
+
 .search-form__btn-img {
   width: 22px;
   height: 22px;
