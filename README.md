@@ -1,4 +1,4 @@
-#проект movies-explorer-frontend
+# Проект movies-explorer-frontend
 Ссылка на фронт:
 http://alina-movies-dipl.nomoredomains.rocks/
 
